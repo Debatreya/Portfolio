@@ -6,7 +6,10 @@ app.use(express.static('root'))
 //     res.sendFile(__dirname + '/root/index.html');
 // })
 // app.get('/style.css', (req, res) =>{
-//     res.sendFile(__dirname + '/style.css')
+//     res.sendFile(__dirname + '/root/css/style.css')
+// });
+// app.get('/script.js', (req, res) =>{
+//     res.sendFile(__dirname + '/root/js/script.js')
 // });
 
 app.listen(3000, ()=>{
