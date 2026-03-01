@@ -38,7 +38,7 @@ const TYPE_CONFIG: Record<
   COMMIT: { icon: GitCommit, color: "text-orange-500", label: "Commit" },
   ISSUE: { icon: MessageSquare, color: "text-red-500", label: "Issue" },
   REPO: { icon: PlusCircle, color: "text-purple-500", label: "New Repo" },
-  MERGE: { icon: GitMerge, color: "text-emerald-600", label: "Merged" },
+  MERGE: { icon: GitMerge, color: "text-purple-500", label: "Merged" },
   OTHER: { icon: Clock, color: "text-muted-foreground", label: "Activity" },
 };
 
@@ -104,7 +104,7 @@ export function PulseFeed() {
   return (
     <div className="flex flex-col h-[calc(100vh-180px)] border border-white/5 bg-card/30 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-sm">
       {/* Header & Filters */}
-      <div className="p-6 border-b border-white/5 space-y-4 bg-white/[0.02]">
+      <div className="p-6 border-b border-white/5 space-y-4 bg-white/2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
@@ -168,7 +168,7 @@ export function PulseFeed() {
                   {/* Timeline dot */}
                   <span
                     className={cn(
-                      "absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full ring-4 ring-background transition-all group-hover:scale-125",
+                      "absolute -left-1.25 top-1.5 h-2.5 w-2.5 rounded-full ring-4 ring-background transition-all group-hover:scale-125",
                       item.type === "TIL" ? "bg-blue-500" : "bg-primary",
                     )}
                   />
@@ -235,7 +235,7 @@ export function PulseFeed() {
       </ScrollArea>
 
       {/* Footer Status */}
-      <div className="px-6 py-3 bg-white/[0.02] border-t border-white/5 flex items-center justify-between">
+      <div className="px-6 py-3 bg-white/2 border-t border-white/5 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" />
           <span className="text-[8px] font-mono text-muted-foreground/50 uppercase tracking-widest">

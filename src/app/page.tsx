@@ -15,7 +15,7 @@ export default function Home() {
       </div>
 
       {/* Column 2: The Pulse Feed - Primary content */}
-      <div className="md:col-span-7 lg:col-span-6 h-full min-h-[500px] lg:min-h-0">
+      <div className="md:col-span-7 lg:col-span-6 h-full min-h-125 lg:min-h-0">
         <PulseFeed />
       </div>
 

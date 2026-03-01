@@ -202,7 +202,12 @@ export async function getGithubEvents(page = 1, per_page = 30) {
               title = `${label} PR: ${prTitle}`;
               type = "PR";
             }
-            link = pr?.html_url || link;
+            // Try html_url first, then construct from prNumber, then fall back to repo
+            link =
+              pr?.html_url ||
+              (prNumber
+                ? `https://github.com/${event.repo.name}/pull/${prNumber}`
+                : link);
             break;
           }
 
