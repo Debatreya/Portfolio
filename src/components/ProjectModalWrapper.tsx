@@ -10,7 +10,11 @@ import {
 } from "@/components/ui/dialog";
 import { useEffect, useState } from "react";
 
-export function ProjectModalWrapper({ children }: { children: React.ReactNode }) {
+export function ProjectModalWrapper({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
 
@@ -25,7 +29,9 @@ export function ProjectModalWrapper({ children }: { children: React.ReactNode })
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-4xl p-0 overflow-hidden bg-[#0c0d0e] border-white/5">
         <DialogTitle className="sr-only">Project Details</DialogTitle>
-        <DialogDescription className="sr-only">Detailed view of the project</DialogDescription>
+        <DialogDescription className="sr-only">
+          Detailed view of the project
+        </DialogDescription>
         {children}
       </DialogContent>
     </Dialog>

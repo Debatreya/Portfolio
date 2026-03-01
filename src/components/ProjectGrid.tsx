@@ -23,21 +23,24 @@ interface ProjectGridProps {
 export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
   const [activeTag, setActiveTag] = useState<string>("All Projects");
 
-  const filteredProjects = activeTag === "All Projects"
-    ? projects
-    : projects.filter((p) => p.techStack?.includes(activeTag));
+  const filteredProjects =
+    activeTag === "All Projects"
+      ? projects
+      : projects.filter((p) => p.techStack?.includes(activeTag));
 
   return (
     <div className="flex flex-col gap-10">
       {/* Tags Filter Strip */}
       <div className="flex items-center gap-2 overflow-x-auto pb-4 scrollbar-hide border-b border-white/5">
-        <Badge 
-            variant={activeTag === "All Projects" ? "default" : "outline"} 
-            className={cn(
-                "whitespace-nowrap cursor-pointer transition-all px-4 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-widest",
-                activeTag === "All Projects" ? "bg-primary text-black" : "text-muted-foreground hover:bg-white/5"
-            )}
-            onClick={() => setActiveTag("All Projects")}
+        <Badge
+          variant={activeTag === "All Projects" ? "default" : "outline"}
+          className={cn(
+            "whitespace-nowrap cursor-pointer transition-all px-4 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-widest",
+            activeTag === "All Projects"
+              ? "bg-primary text-black"
+              : "text-muted-foreground hover:bg-white/5",
+          )}
+          onClick={() => setActiveTag("All Projects")}
         >
           All Projects
         </Badge>
@@ -46,8 +49,10 @@ export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
             key={tag}
             variant={activeTag === tag ? "default" : "outline"}
             className={cn(
-                "whitespace-nowrap cursor-pointer transition-all px-4 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-widest",
-                activeTag === tag ? "bg-primary text-black" : "text-muted-foreground hover:bg-white/5"
+              "whitespace-nowrap cursor-pointer transition-all px-4 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-widest",
+              activeTag === tag
+                ? "bg-primary text-black"
+                : "text-muted-foreground hover:bg-white/5",
             )}
             onClick={() => setActiveTag(tag)}
           >
@@ -125,7 +130,8 @@ export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                     </span>
-                    SYNCED {formatDistanceToNow(new Date(project.stats.lastCommit), {
+                    SYNCED{" "}
+                    {formatDistanceToNow(new Date(project.stats.lastCommit), {
                       addSuffix: true,
                     })}
                   </div>
@@ -135,14 +141,16 @@ export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
           </Link>
         ))}
       </div>
-      
+
       {filteredProjects.length === 0 && (
-          <div className="py-20 text-center flex flex-col items-center gap-4">
-              <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center bg-white/5">
-                <Code2 className="w-6 h-6 text-muted-foreground" />
-              </div>
-              <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">No projects found for the selected stack</p>
+        <div className="py-20 text-center flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center bg-white/5">
+            <Code2 className="w-6 h-6 text-muted-foreground" />
           </div>
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+            No projects found for the selected stack
+          </p>
+        </div>
       )}
     </div>
   );

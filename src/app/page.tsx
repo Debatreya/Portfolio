@@ -23,7 +23,9 @@ export default function Home() {
       <div className="md:col-span-12 lg:col-span-3 h-full overflow-y-auto scrollbar-hide">
         <div className="space-y-6">
           <div className="p-6 rounded-xl border border-white/5 bg-card/30 backdrop-blur-sm text-card-foreground shadow-xl flex flex-col gap-4">
-            <h3 className="text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">Quick Actions</h3>
+            <h3 className="text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
+              Quick Actions
+            </h3>
 
             <Button
               className="w-full justify-between group"

@@ -13,7 +13,7 @@ const octokit = new Octokit({
 const GITHUB_USERNAME = process.env.NEXT_PUBLIC_GITHUB_USERNAME || "Debatreya";
 const TIL_REPO_RAW = process.env.TIL_GARDEN_REPO || "Debatreya-TIL-garden";
 const TIL_REPO = TIL_REPO_RAW.split("/").pop() || "Debatreya-TIL-garden";
-const TIL_BRANCH = "master"; 
+const TIL_BRANCH = "master";
 
 const CONTENT_DIR = path.join(process.cwd(), "src/content");
 
@@ -105,7 +105,9 @@ export async function getRemoteTILs(): Promise<Post[]> {
 
     // Filter for .qmd or .md files specifically in the 'records/' directory if applicable
     const qmdFiles = tree.tree.filter(
-      (node) => (node.path?.endsWith(".qmd") || node.path?.endsWith(".md")) && node.type === "blob"
+      (node) =>
+        (node.path?.endsWith(".qmd") || node.path?.endsWith(".md")) &&
+        node.type === "blob",
     );
 
     const postPromises = qmdFiles.map(async (file) => {
@@ -113,11 +115,11 @@ export async function getRemoteTILs(): Promise<Post[]> {
     });
 
     const posts = (await Promise.all(postPromises)).filter(
-      (p): p is Post => p !== null
+      (p): p is Post => p !== null,
     );
 
     return posts.sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
     );
   } catch (error) {
     console.error("Error fetching remote TILs:", error);
@@ -125,7 +127,9 @@ export async function getRemoteTILs(): Promise<Post[]> {
   }
 }
 
-export async function getRemoteTILByPath(filePath: string): Promise<Post | null> {
+export async function getRemoteTILByPath(
+  filePath: string,
+): Promise<Post | null> {
   try {
     const { data: fileData } = await octokit.rest.repos.getContent({
       owner: GITHUB_USERNAME,
@@ -137,13 +141,21 @@ export async function getRemoteTILByPath(filePath: string): Promise<Post | null>
     if ("content" in fileData) {
       const contentRaw = Buffer.from(fileData.content, "base64").toString();
       const { data, content } = matter(contentRaw);
-      
-      const id = data.id || filePath.split("/").pop()?.replace(/\.(qmd|md)$/, "") || "";
+
+      const id =
+        data.id ||
+        filePath
+          .split("/")
+          .pop()
+          ?.replace(/\.(qmd|md)$/, "") ||
+        "";
 
       return {
         id,
         title: data.title || id,
-        date: data.date ? new Date(data.date).toISOString() : new Date().toISOString(),
+        date: data.date
+          ? new Date(data.date).toISOString()
+          : new Date().toISOString(),
         category: data.category || "TIL",
         tags: (data.tags || []).map((t: string) => t.replace(/^#/, "")), // strip leading #
         excerpt: data.excerpt || `${content.slice(0, 150)}...`,
@@ -167,13 +179,13 @@ export async function getRemoteTILByPath(filePath: string): Promise<Post | null>
 // Keep the old one just in case or update it to use the new logic
 export async function getRemoteTILById(id: string): Promise<Post | null> {
   const allPosts = await getRemoteTILs();
-  return allPosts.find(p => p.id === id) || null;
+  return allPosts.find((p) => p.id === id) || null;
 }
 
 export async function getProjectDeepDive(id: string) {
   // 1. Get the base manifest and stats from GitHub first (to ensure matching IDs)
   const allProjects = await getProjects();
-  const baseProject = allProjects.find(p => p.id === id);
+  const baseProject = allProjects.find((p) => p.id === id);
 
   const directory = path.join(CONTENT_DIR, "projects");
   const fullPath = path.join(directory, `${id}.md`);

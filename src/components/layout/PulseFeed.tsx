@@ -2,16 +2,16 @@
 
 import { useEffect, useState, useRef } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { 
-  BookOpen, 
-  Clock, 
-  GitPullRequest, 
-  PlusCircle, 
-  GitCommit, 
-  MessageSquare, 
+import {
+  BookOpen,
+  Clock,
+  GitPullRequest,
+  PlusCircle,
+  GitCommit,
+  MessageSquare,
   GitMerge,
   Loader2,
-  ChevronDown
+  ChevronDown,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -29,7 +29,10 @@ interface ActivityItem {
   repo: string | null;
 }
 
-const TYPE_CONFIG: Record<EventType, { icon: any; color: string; label: string }> = {
+const TYPE_CONFIG: Record<
+  EventType,
+  { icon: any; color: string; label: string }
+> = {
   TIL: { icon: BookOpen, color: "text-blue-500", label: "TIL" },
   PR: { icon: GitPullRequest, color: "text-emerald-500", label: "PR" },
   COMMIT: { icon: GitCommit, color: "text-orange-500", label: "Commit" },
@@ -45,21 +48,28 @@ export function PulseFeed() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [activeFilters, setActiveFilters] = useState<EventType[]>(["TIL", "MERGE"]);
+  const [activeFilters, setActiveFilters] = useState<EventType[]>([
+    "TIL",
+    "MERGE",
+  ]);
 
-  const fetchActivities = async (pageNum: number, currentFilters: EventType[]) => {
+  const fetchActivities = async (
+    pageNum: number,
+    currentFilters: EventType[],
+  ) => {
     try {
-      const typesQuery = currentFilters.length > 0 ? `&types=${currentFilters.join(",")}` : "";
+      const typesQuery =
+        currentFilters.length > 0 ? `&types=${currentFilters.join(",")}` : "";
       const res = await fetch(`/api/events?page=${pageNum}${typesQuery}`);
       const data = await res.json();
-      
+
       // Update hasMore based on server response
       setHasMore(data.hasMore || false);
-      
+
       if (pageNum === 1) {
         setActivities(data.events || []);
       } else {
-        setActivities(prev => [...prev, ...(data.events || [])]);
+        setActivities((prev) => [...prev, ...(data.events || [])]);
       }
     } catch (err) {
       console.error("Failed to fetch activities:", err);
@@ -77,10 +87,8 @@ export function PulseFeed() {
   }, [activeFilters]);
 
   const toggleFilter = (type: EventType) => {
-    setActiveFilters(prev => 
-      prev.includes(type) 
-        ? prev.filter(t => t !== type) 
-        : [...prev, type]
+    setActiveFilters((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type],
     );
   };
 
@@ -104,13 +112,16 @@ export function PulseFeed() {
               RECENT_ACTIVITY
             </h2>
           </div>
-          <Badge variant="outline" className="text-[9px] font-mono border-emerald-500/20 text-emerald-500 bg-emerald-500/5 px-2 py-0">
+          <Badge
+            variant="outline"
+            className="text-[9px] font-mono border-emerald-500/20 text-emerald-500 bg-emerald-500/5 px-2 py-0"
+          >
             LIVE_SYNC
           </Badge>
         </div>
 
         <div className="flex flex-wrap gap-2">
-          {(Object.keys(TYPE_CONFIG) as EventType[]).map(type => {
+          {(Object.keys(TYPE_CONFIG) as EventType[]).map((type) => {
             const isActive = activeFilters.includes(type);
             return (
               <button
@@ -118,9 +129,9 @@ export function PulseFeed() {
                 onClick={() => toggleFilter(type)}
                 className={cn(
                   "px-3 py-1 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider transition-all border",
-                  isActive 
-                    ? "bg-primary text-black border-primary shadow-[0_0_10px_rgba(16,241,149,0.2)]" 
-                    : "bg-white/5 text-muted-foreground border-white/5 hover:border-white/10"
+                  isActive
+                    ? "bg-primary text-black border-primary shadow-[0_0_10px_rgba(16,241,149,0.2)]"
+                    : "bg-white/5 text-muted-foreground border-white/5 hover:border-white/10",
                 )}
               >
                 {TYPE_CONFIG[type].label}
@@ -134,10 +145,12 @@ export function PulseFeed() {
       <ScrollArea className="flex-1 px-6 py-6 overflow-y-auto">
         <div className="relative border-l border-white/5 ml-3 space-y-8 pb-10">
           {loading ? (
-             <div className="flex flex-col items-center justify-center py-20 gap-3">
-                <Loader2 className="w-6 h-6 text-primary animate-spin" />
-                <p className="font-mono text-[10px] text-muted-foreground uppercase">Initialising System Scan...</p>
-             </div>
+            <div className="flex flex-col items-center justify-center py-20 gap-3">
+              <Loader2 className="w-6 h-6 text-primary animate-spin" />
+              <p className="font-mono text-[10px] text-muted-foreground uppercase">
+                Initialising System Scan...
+              </p>
+            </div>
           ) : filteredActivities.length === 0 ? (
             <div className="pl-8 py-10">
               <p className="text-xs font-mono text-muted-foreground uppercase italic tracking-widest">
@@ -148,18 +161,25 @@ export function PulseFeed() {
             filteredActivities.map((item, idx) => {
               const config = TYPE_CONFIG[item.type] || TYPE_CONFIG.OTHER;
               const Icon = config.icon;
-              
+
               return (
                 <div key={`${item.id}-${idx}`} className="relative pl-8 group">
                   {/* Timeline dot */}
-                  <span className={cn(
-                    "absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full ring-4 ring-background transition-all group-hover:scale-125",
-                    item.type === "TIL" ? "bg-blue-500" : "bg-primary"
-                  )} />
+                  <span
+                    className={cn(
+                      "absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full ring-4 ring-background transition-all group-hover:scale-125",
+                      item.type === "TIL" ? "bg-blue-500" : "bg-primary",
+                    )}
+                  />
 
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-3">
-                      <div className={cn("p-1.5 rounded-md bg-white/5 border border-white/5", config.color)}>
+                      <div
+                        className={cn(
+                          "p-1.5 rounded-md bg-white/5 border border-white/5",
+                          config.color,
+                        )}
+                      >
                         <Icon className="w-3.5 h-3.5" />
                       </div>
                       <div className="flex flex-col">
@@ -167,13 +187,15 @@ export function PulseFeed() {
                           {item.repo || "KNOWLEDGE_BASE"}
                         </span>
                         <span className="text-[9px] font-mono text-muted-foreground/40 mt-1">
-                          {formatDistanceToNow(new Date(item.date), { addSuffix: true }).toUpperCase()}
+                          {formatDistanceToNow(new Date(item.date), {
+                            addSuffix: true,
+                          }).toUpperCase()}
                         </span>
                       </div>
                     </div>
 
-                    <a 
-                      href={item.link} 
+                    <a
+                      href={item.link}
                       target={item.type === "TIL" ? "_self" : "_blank"}
                       className="text-sm font-bold text-foreground/90 group-hover:text-primary transition-colors leading-snug max-w-md block"
                     >
@@ -207,14 +229,18 @@ export function PulseFeed() {
           )}
         </div>
       </ScrollArea>
-      
+
       {/* Footer Status */}
       <div className="px-6 py-3 bg-white/[0.02] border-t border-white/5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" />
-              <span className="text-[8px] font-mono text-muted-foreground/50 uppercase tracking-widest">SYS_UPTIME: 99.9%</span>
-          </div>
-          <span className="text-[8px] font-mono text-muted-foreground/30 uppercase tracking-widest">NODE_V1.0.4</span>
+        <div className="flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" />
+          <span className="text-[8px] font-mono text-muted-foreground/50 uppercase tracking-widest">
+            SYS_UPTIME: 99.9%
+          </span>
+        </div>
+        <span className="text-[8px] font-mono text-muted-foreground/30 uppercase tracking-widest">
+          NODE_V1.0.4
+        </span>
       </div>
     </div>
   );

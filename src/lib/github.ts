@@ -14,44 +14,51 @@ export async function getProjects(): Promise<ProjectManifest[]> {
       q: `user:${GITHUB_USERNAME} topic:portfolio`,
     });
 
-    const projectPromises = searchData.items.map(async (repo): Promise<ProjectManifest | null> => {
-      try {
-        // 2. Fetch the .debatreya manifest file
-        const { data: manifestContent } = await octokit.rest.repos.getContent({
-          owner: GITHUB_USERNAME,
-          repo: repo.name,
-          path: ".debatreya",
-        });
-
-        if ("content" in manifestContent) {
-          const content = Buffer.from(manifestContent.content, "base64").toString();
-          const manifest = JSON.parse(content) as ProjectManifest;
-
-          // 3. Live Data Enrichment
-          return {
-            ...manifest,
-            id: manifest.id || repo.name, 
-            links: {
-              ...manifest.links,
-              github: repo.html_url,
-              demo: manifest.links?.demo || repo.homepage || undefined,
+    const projectPromises = searchData.items.map(
+      async (repo): Promise<ProjectManifest | null> => {
+        try {
+          // 2. Fetch the .debatreya manifest file
+          const { data: manifestContent } = await octokit.rest.repos.getContent(
+            {
+              owner: GITHUB_USERNAME,
+              repo: repo.name,
+              path: ".debatreya",
             },
-            stats: {
-              stars: repo.stargazers_count,
-              lastCommit: repo.pushed_at || new Date().toISOString(),
-            },
-          };
+          );
+
+          if ("content" in manifestContent) {
+            const content = Buffer.from(
+              manifestContent.content,
+              "base64",
+            ).toString();
+            const manifest = JSON.parse(content) as ProjectManifest;
+
+            // 3. Live Data Enrichment
+            return {
+              ...manifest,
+              id: manifest.id || repo.name,
+              links: {
+                ...manifest.links,
+                github: repo.html_url,
+                demo: manifest.links?.demo || repo.homepage || undefined,
+              },
+              stats: {
+                stars: repo.stargazers_count,
+                lastCommit: repo.pushed_at || new Date().toISOString(),
+              },
+            };
+          }
+        } catch (error) {
+          console.error(`Error fetching manifest for ${repo.name}:`, error);
+          return null;
         }
-      } catch (error) {
-        console.error(`Error fetching manifest for ${repo.name}:`, error);
         return null;
-      }
-      return null;
-    });
+      },
+    );
 
     const projectsRaw = await Promise.all(projectPromises);
     const projects = projectsRaw.filter(
-      (p): p is ProjectManifest => p !== null
+      (p): p is ProjectManifest => p !== null,
     );
 
     // Sort by priority
@@ -69,7 +76,7 @@ export async function getProjects(): Promise<ProjectManifest[]> {
 async function getCommitCount(
   repoFullName: string,
   before: string,
-  head: string
+  head: string,
 ): Promise<number> {
   try {
     const [owner, repo] = repoFullName.split("/");
@@ -90,7 +97,7 @@ async function getCommitCount(
  */
 async function getPRTitle(
   repoFullName: string,
-  prNumber: number
+  prNumber: number,
 ): Promise<string> {
   try {
     const [owner, repo] = repoFullName.split("/");
@@ -107,11 +114,12 @@ async function getPRTitle(
 
 export async function getGithubEvents(page = 1, per_page = 30) {
   try {
-    const { data: events } = await octokit.rest.activity.listEventsForAuthenticatedUser({
-      username: GITHUB_USERNAME,
-      per_page,
-      page,
-    });
+    const { data: events } =
+      await octokit.rest.activity.listEventsForAuthenticatedUser({
+        username: GITHUB_USERNAME,
+        per_page,
+        page,
+      });
 
     const parsed = await Promise.all(
       events.map(async (event) => {
@@ -120,16 +128,14 @@ export async function getGithubEvents(page = 1, per_page = 30) {
         let type: "PR" | "COMMIT" | "ISSUE" | "REPO" | "MERGE" | "OTHER" =
           "OTHER";
         const payload = event.payload as any;
-        const repoShort =
-          event.repo.name.split("/")[1] || event.repo.name;
+        const repoShort = event.repo.name.split("/")[1] || event.repo.name;
 
         switch (event.type) {
           // ── PushEvent ────────────────────────────────────────────
           // Events API payload: push_id, ref, head, before, repository_id
           // size / commits are NOT guaranteed by the Events API spec.
           case "PushEvent": {
-            const branch =
-              payload.ref?.replace("refs/heads/", "") || "unknown";
+            const branch = payload.ref?.replace("refs/heads/", "") || "unknown";
 
             // Try undocumented size field first, then commits array, then Compare API
             let commitCount: number | null =
@@ -144,7 +150,7 @@ export async function getGithubEvents(page = 1, per_page = 30) {
               commitCount = await getCommitCount(
                 event.repo.name,
                 payload.before,
-                payload.head
+                payload.head,
               );
             }
 
@@ -178,11 +184,14 @@ export async function getGithubEvents(page = 1, per_page = 30) {
             // Resolve title: Events API may truncate the PR object for org repos
             let prTitle: string =
               pr?.title ||
-              (prNumber ? await getPRTitle(event.repo.name, prNumber) : "a pull request");
+              (prNumber
+                ? await getPRTitle(event.repo.name, prNumber)
+                : "a pull request");
 
             // Detect merge: Events API sends action:"merged" directly
             const isMerged =
-              action === "merged" || (action === "closed" && pr?.merged === true);
+              action === "merged" ||
+              (action === "closed" && pr?.merged === true);
 
             if (isMerged) {
               title = `Merged PR: ${prTitle}`;
@@ -273,7 +282,7 @@ export async function getGithubEvents(page = 1, per_page = 30) {
           date: event.created_at || new Date().toISOString(),
           link,
         };
-      })
+      }),
     );
 
     return parsed;

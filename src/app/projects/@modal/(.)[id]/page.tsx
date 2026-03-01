@@ -9,7 +9,7 @@ export default async function ProjectModalPage({
   params: Promise<{ id: string }>;
 }) {
   const id = (await params).id;
-  
+
   // Try to get deep dive first, then fall back to basic manifest if needed
   const project = await getProjectDeepDive(id);
 

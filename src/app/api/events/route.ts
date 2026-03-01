@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     // The Events API returns at most 300 events from the last 30 days.
     const githubEvents = await getGithubEvents(1, 100);
     const remoteTils = await getRemoteTILs();
-    
+
     const tils = remoteTils.map((post) => ({
       id: post.id,
       type: "TIL" as const,
@@ -26,13 +26,15 @@ export async function GET(request: Request) {
 
     // Merge all sources and sort by date
     let combined = [...tils, ...githubEvents];
-    
+
     // Server-side type filtering
     if (types && types.length > 0) {
-      combined = combined.filter(item => types.includes(item.type));
+      combined = combined.filter((item) => types.includes(item.type));
     }
-    
-    combined.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    combined.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+    );
 
     // Paginate from the full sorted list
     const startIndex = (page - 1) * perPage;
@@ -48,6 +50,9 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error("API Event Fetch Error:", error);
-    return NextResponse.json({ error: "Failed to fetch events" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch events" },
+      { status: 500 },
+    );
   }
 }

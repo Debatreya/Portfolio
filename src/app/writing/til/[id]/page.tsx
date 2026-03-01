@@ -133,22 +133,28 @@ export default async function TilPost({
   // Fetch related projects for the knowledge graph
   const allProjects = await getProjects();
   const relatedProjects = allProjects.filter((p) =>
-    post.related_projects?.includes(p.id)
+    post.related_projects?.includes(p.id),
   );
 
   // Fetch related TILs
   const allTILs = await getRemoteTILs();
   const relatedTILs = allTILs
-    .filter((t) => t.id !== post.id && (t.tags.some(tag => post.tags.includes(tag))))
+    .filter(
+      (t) => t.id !== post.id && t.tags.some((tag) => post.tags.includes(tag)),
+    )
     .slice(0, 3);
 
   const readTime = post.read_time || "5 MIN_READ";
-  
+
   // Resolve avatar paths
-  const gardenRawUrl = "https://raw.githubusercontent.com/Debatreya/Debatreya-TIL-garden/master";
-  const avatarUrls = post.contributor_avatars?.map(path => 
-    path.startsWith("http") ? path : `${gardenRawUrl}${path.startsWith("/") ? "" : "/"}${path}`
-  ) || [];
+  const gardenRawUrl =
+    "https://raw.githubusercontent.com/Debatreya/Debatreya-TIL-garden/master";
+  const avatarUrls =
+    post.contributor_avatars?.map((path) =>
+      path.startsWith("http")
+        ? path
+        : `${gardenRawUrl}${path.startsWith("/") ? "" : "/"}${path}`,
+    ) || [];
 
   return (
     <div className="flex flex-col lg:flex-row gap-12 py-12">
@@ -308,7 +314,11 @@ export default async function TilPost({
                     key={i}
                     className="w-8 h-8 rounded-full border-2 border-[#121415] bg-muted overflow-hidden flex items-center justify-center"
                   >
-                    <img src={url} alt="Contributor" className="w-full h-full object-cover" />
+                    <img
+                      src={url}
+                      alt="Contributor"
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 ))
               ) : (
@@ -344,4 +354,3 @@ export default async function TilPost({
     </div>
   );
 }
-

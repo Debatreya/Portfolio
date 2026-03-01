@@ -5,9 +5,11 @@ export const revalidate = 86400; // Refresh data daily
 
 export default async function ProjectsPage() {
   const projectsData = await getProjects();
-  
+
   // Extract unique tech stack tags from all projects
-  const allTags = Array.from(new Set(projectsData.flatMap((p) => p.techStack || []))).sort();
+  const allTags = Array.from(
+    new Set(projectsData.flatMap((p) => p.techStack || [])),
+  ).sort();
 
   return (
     <div className="max-w-6xl mx-auto py-12 px-6 flex flex-col gap-10">
