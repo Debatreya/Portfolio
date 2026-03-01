@@ -1,0 +1,149 @@
+"use client";
+
+import { useState } from "react";
+import { formatDistanceToNow } from "date-fns";
+import { Code2, Star, ArrowUpRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+
+interface ProjectGridProps {
+  projects: any[];
+  allTags: string[];
+}
+
+export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
+  const [activeTag, setActiveTag] = useState<string>("All Projects");
+
+  const filteredProjects = activeTag === "All Projects"
+    ? projects
+    : projects.filter((p) => p.techStack?.includes(activeTag));
+
+  return (
+    <div className="flex flex-col gap-10">
+      {/* Tags Filter Strip */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-4 scrollbar-hide border-b border-white/5">
+        <Badge 
+            variant={activeTag === "All Projects" ? "default" : "outline"} 
+            className={cn(
+                "whitespace-nowrap cursor-pointer transition-all px-4 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-widest",
+                activeTag === "All Projects" ? "bg-primary text-black" : "text-muted-foreground hover:bg-white/5"
+            )}
+            onClick={() => setActiveTag("All Projects")}
+        >
+          All Projects
+        </Badge>
+        {allTags.map((tag) => (
+          <Badge
+            key={tag}
+            variant={activeTag === tag ? "default" : "outline"}
+            className={cn(
+                "whitespace-nowrap cursor-pointer transition-all px-4 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-widest",
+                activeTag === tag ? "bg-primary text-black" : "text-muted-foreground hover:bg-white/5"
+            )}
+            onClick={() => setActiveTag(tag)}
+          >
+            {tag}
+          </Badge>
+        ))}
+      </div>
+
+      {/* Projects Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredProjects.map((project) => (
+          <Link
+            key={project.id}
+            href={`/projects/${project.id}`}
+            scroll={false}
+            className="flex flex-col group hover:-translate-y-1 transition-transform duration-300 border border-white/5 bg-card/50 hover:bg-card rounded-xl overflow-hidden shadow-lg"
+          >
+            <Card className="border-0 bg-transparent flex flex-col h-full rounded-none">
+              <CardHeader className="flex flex-col gap-2 pb-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-muted-foreground bg-muted/50 px-2 py-1 rounded-md">
+                    <Code2 className="w-4 h-4" />
+                    <span className="text-xs font-mono font-medium truncate max-w-[120px]">
+                      {project.techStack?.[0]}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {project.stats?.stars !== undefined && (
+                      <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-muted-foreground">
+                        <Star className="w-3.5 h-3.5 fill-muted-foreground/30" />
+                        {project.stats.stars}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <CardTitle className="tracking-tight text-xl mt-2 group-hover:text-primary transition-colors flex items-center justify-between">
+                  {project.name}
+                  {project.hasDeepDive && (
+                    <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all -translate-y-1" />
+                  )}
+                </CardTitle>
+                <CardDescription className="font-medium text-foreground/80 line-clamp-1">
+                  {project.tagline}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex-1 pb-4">
+                <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
+                  {project.description}
+                </p>
+
+                <div className="flex flex-wrap gap-1.5 mt-4">
+                  {project.techStack?.slice(0, 4).map((tech: string) => (
+                    <Badge
+                      key={tech}
+                      variant="secondary"
+                      className="text-[10px] font-mono px-1.5 py-0 bg-muted/30 pointer-events-none"
+                    >
+                      {tech}
+                    </Badge>
+                  ))}
+                  {(project.techStack?.length || 0) > 4 && (
+                    <span className="text-[10px] text-muted-foreground font-mono">
+                      +{(project.techStack?.length || 0) - 4} MORE
+                    </span>
+                  )}
+                </div>
+              </CardContent>
+              <CardFooter className="pt-4 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
+                <div className="flex items-center gap-1.5">
+                  ID: {project.id.slice(0, 10)}
+                </div>
+                {project.stats?.lastCommit && (
+                  <div className="flex items-center gap-1.5">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    SYNCED {formatDistanceToNow(new Date(project.stats.lastCommit), {
+                      addSuffix: true,
+                    })}
+                  </div>
+                )}
+              </CardFooter>
+            </Card>
+          </Link>
+        ))}
+      </div>
+      
+      {filteredProjects.length === 0 && (
+          <div className="py-20 text-center flex flex-col items-center gap-4">
+              <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center bg-white/5">
+                <Code2 className="w-6 h-6 text-muted-foreground" />
+              </div>
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">No projects found for the selected stack</p>
+          </div>
+      )}
+    </div>
+  );
+}

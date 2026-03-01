@@ -1,5 +1,4 @@
 import { Download, ExternalLink } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import resumeData from "@/data/resume.json";
 
@@ -23,94 +22,119 @@ export default function ResumePage() {
       </div>
 
       {/* Header Section */}
-      <header className="flex flex-col gap-4 border-b pb-8">
-        <h1 className="text-4xl md:text-5xl font-black tracking-tight">
-          {profile.name}
-        </h1>
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-muted-foreground">
-          <span className="font-medium text-foreground">{profile.role}</span>
-          <span>{profile.location}</span>
+      <header className="flex flex-col md:flex-row md:items-start justify-between gap-6 border-b border-white/10 pb-12 pt-4">
+        <div className="flex flex-col gap-5 max-w-2xl">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+            {profile.name}
+          </h1>
+          <p className="text-lg text-muted-foreground leading-relaxed">
+            Software Engineer specialized in{" "}
+            <span className="text-primary">distributed systems</span> and{" "}
+            <span className="text-primary">digital public goods</span>.
+            Currently scaling infrastructure at Microsoft.
+          </p>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-mono text-muted-foreground uppercase tracking-widest mt-2">
+            <div className="flex items-center gap-2">
+              <span className="text-primary">LOC:</span>
+              <span>{profile.location}</span>
+            </div>
+            <a
+              href={`mailto:${profile.socials.email}`}
+              className="flex items-center gap-2 hover:text-primary transition-colors"
+            >
+              <span className="text-primary">MAIL:</span>
+              <span>{profile.socials.email}</span>
+            </a>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-3 min-w-[140px]">
           <a
-            href={`mailto:${profile.socials.email}`}
-            className="hover:text-primary transition-colors"
+            href={profile.socials.linkedin}
+            target="_blank"
+            className="px-4 py-2 text-xs font-mono font-bold uppercase tracking-widest text-center border border-white/10 rounded-md hover:bg-white/5 transition-colors"
           >
-            {profile.socials.email}
+            LinkedIn
           </a>
           <a
             href={profile.socials.github}
             target="_blank"
-            className="hover:text-primary transition-colors"
+            className="px-4 py-2 text-xs font-mono font-bold uppercase tracking-widest text-center border border-white/10 rounded-md hover:bg-white/5 transition-colors"
           >
             GitHub
-          </a>
-          <a
-            href={profile.socials.linkedin}
-            target="_blank"
-            className="hover:text-primary transition-colors"
-          >
-            LinkedIn
           </a>
         </div>
       </header>
 
       {/* Experience Section */}
-      <section className="flex flex-col gap-8">
-        <h2 className="text-2xl font-bold tracking-tight">Experience</h2>
-        <div className="flex flex-col gap-12">
+      <section className="flex flex-col gap-10">
+        <h2 className="text-xs font-mono font-bold uppercase tracking-[0.2em] text-muted-foreground border-b border-white/10 pb-4">
+          Work Experience
+        </h2>
+        <div className="flex flex-col gap-14">
           {work.map((job) => (
-            <div
-              key={job.id}
-              className="flex flex-col md:flex-row gap-4 md:gap-8 group"
-            >
-              <div className="min-w-[200px] text-sm text-muted-foreground font-medium pt-1">
-                {job.duration}
-              </div>
-              <div className="flex flex-col gap-3 flex-1">
+            <div key={job.id} className="flex flex-col gap-4 group">
+              <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-2">
                 <div className="flex flex-col">
                   <h3 className="text-xl font-bold text-foreground">
                     {job.position}
                   </h3>
-                  <div className="flex items-center gap-2 text-muted-foreground font-medium">
-                    <span>{job.company}</span>
-                    <span>•</span>
-                    <span>{job.location}</span>
-                  </div>
+                  <div className="text-primary font-medium">{job.company}</div>
                 </div>
-
-                <ul className="list-disc list-inside space-y-1.5 text-muted-foreground ml-1">
-                  {job.description.map((desc, i) => (
-                    <li key={i} className="leading-relaxed">
-                      <span className="-ml-1">{desc}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {job.techStack.map((tech) => (
-                    <Badge
-                      key={tech}
-                      variant="secondary"
-                      className="font-mono text-[10px] bg-muted/50 rounded pointer-events-none"
-                    >
-                      {tech}
-                    </Badge>
-                  ))}
+                <div className="text-xs font-mono text-muted-foreground uppercase tracking-wider">
+                  {job.duration}
                 </div>
+              </div>
 
-                {job.slug && (
-                  <div className="mt-4">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="gap-2 group-hover:border-primary/50 transition-colors"
-                      asChild
-                    >
-                      <a href={`/experience/${job.slug}`}>
-                        Read Deep-Dive <ExternalLink className="w-3 h-3" />
-                      </a>
-                    </Button>
+              <ul className="list-disc list-outside ml-4 space-y-3 text-sm text-foreground/80">
+                {job.description.map((desc) => (
+                  <li key={desc} className="leading-relaxed pl-2">
+                    {desc}
+                  </li>
+                ))}
+              </ul>
+
+              {job.slug && (
+                <div className="mt-4">
+                  <Button
+                    variant="outline"
+                    className="border-primary/20 bg-primary/5 text-primary hover:bg-primary hover:text-primary-foreground text-xs font-mono uppercase tracking-widest rounded-sm px-4 h-8"
+                    asChild
+                  >
+                    <a href={`/experience/${job.slug}`}>
+                      Read Deep-Dive <ExternalLink className="w-3 h-3 ml-2" />
+                    </a>
+                  </Button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Technical Stack Section */}
+      <section className="flex flex-col gap-8 pt-8">
+        <h2 className="text-xs font-mono font-bold uppercase tracking-[0.2em] text-muted-foreground border-b border-white/10 pb-4">
+          Technical Stack
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-white/10 rounded-lg overflow-hidden">
+          {Object.entries(skills).map(([category, items], i, arr) => (
+            <div
+              key={category}
+              className={`flex flex-col gap-4 p-6 ${i !== arr.length - 1 ? "border-b md:border-b-0 md:border-r border-white/10" : ""}`}
+            >
+              <h3 className="text-[10px] font-bold font-mono text-primary uppercase tracking-widest">
+                {category}
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {items.map((skill) => (
+                  <div
+                    key={skill}
+                    className="px-2 py-1 text-xs font-mono bg-white/5 border border-white/10 rounded-md text-foreground/80"
+                  >
+                    {skill}
                   </div>
-                )}
+                ))}
               </div>
             </div>
           ))}
@@ -118,47 +142,29 @@ export default function ResumePage() {
       </section>
 
       {/* Education Section */}
-      <section className="flex flex-col gap-8">
-        <h2 className="text-2xl font-bold tracking-tight">Education</h2>
+      <section className="flex flex-col gap-8 pt-8 pb-12 border-b border-white/10">
+        <h2 className="text-xs font-mono font-bold uppercase tracking-[0.2em] text-muted-foreground border-b border-white/10 pb-4">
+          Education
+        </h2>
         <div className="flex flex-col gap-8">
-          {education.map((edu, idx) => (
-            <div key={idx} className="flex flex-col md:flex-row gap-4 md:gap-8">
-              <div className="min-w-[200px] text-sm text-muted-foreground font-medium pt-1">
-                {edu.duration}
-              </div>
-              <div className="flex flex-col flex-1">
-                <h3 className="text-lg font-bold text-foreground">
-                  {edu.institution}
+          {education.map((edu) => (
+            <div
+              key={edu.institution}
+              className="flex flex-col md:flex-row md:items-baseline justify-between gap-2 p-6 border border-white/10 rounded-lg"
+            >
+              <div className="flex flex-col gap-1">
+                <h3 className="text-base font-bold text-foreground">
+                  {edu.degree}
                 </h3>
-                <div className="flex items-center justify-between mt-1 text-muted-foreground">
-                  <span>{edu.degree}</span>
-                  {edu.grade && (
-                    <span className="font-mono bg-muted/50 px-2 py-0.5 rounded text-xs">
-                      {edu.grade}
-                    </span>
-                  )}
+                <div className="text-sm text-muted-foreground">
+                  {edu.institution}
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Skills Section */}
-      <section className="flex flex-col gap-8">
-        <h2 className="text-2xl font-bold tracking-tight">Technical Arsenal</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {Object.entries(skills).map(([category, items]) => (
-            <div key={category} className="flex flex-col gap-3">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                {category}
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {items.map((skill) => (
-                  <Badge key={skill} variant="outline" className="px-3 py-1">
-                    {skill}
-                  </Badge>
-                ))}
+              <div className="flex flex-col md:items-end gap-1 text-xs font-mono uppercase tracking-widest text-muted-foreground">
+                <div className="text-primary font-bold">
+                  {edu.grade && `GPA: ${edu.grade}`}
+                </div>
+                <div>{edu.duration}</div>
               </div>
             </div>
           ))}

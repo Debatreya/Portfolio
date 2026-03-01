@@ -85,6 +85,7 @@ export interface ProjectManifest {
   featured: boolean;
   priority: number; // Higher number = shown first
   relatedTILIds?: string[];
+  hasDeepDive?: boolean;
 }
 
 /**
@@ -101,6 +102,12 @@ export interface Post {
   excerpt: string;
   content: string; // HTML or Markdown string
   type: "til" | "blog";
+  read_time?: string;
+  related_projects?: string[]; // Project IDs
+  related_tils?: string[];
+  system_manifest?: string; // For System Note
+  code_filename?: string; // For code block header
+  contributor_avatars?: string[];
 }
 
 /**

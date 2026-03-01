@@ -1,15 +1,15 @@
 /**
  * scripts/sync-projects.mjs
- * 
+ *
  * Fetches GitHub repositories for the authenticated user that have the topic "portfolio".
  * For each repo, it attempts to fetch the HEAD:.debatreya file to construct the project manifest.
  * Outputs to src/data/projects.json.
  */
 
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { Octokit } from "octokit";
-import fs from "fs/promises";
-import path from "path";
-import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,21 +26,25 @@ const octokit = new Octokit({
 });
 
 async function fetchProjects() {
-  console.log(`[sync-projects] Fetching repositories for ${GITHUB_USERNAME} with topic 'portfolio'...`);
-  
+  console.log(
+    `[sync-projects] Fetching repositories for ${GITHUB_USERNAME} with topic 'portfolio'...`,
+  );
+
   try {
     const { data: repos } = await octokit.rest.search.repos({
       q: `user:${GITHUB_USERNAME} topic:portfolio`,
       per_page: 100,
     });
 
-    console.log(`[sync-projects] Found ${repos.items.length} matching repositories.`);
-    
+    console.log(
+      `[sync-projects] Found ${repos.items.length} matching repositories.`,
+    );
+
     const projects = [];
 
     for (const repo of repos.items) {
       console.log(`[sync-projects] Processing ${repo.name}...`);
-      
+
       try {
         // Attempt to fetch the .debatreya manifest file
         const { data: fileData } = await octokit.rest.repos.getContent({
@@ -50,7 +54,9 @@ async function fetchProjects() {
         });
 
         if (fileData.type === "file" && fileData.content) {
-          const content = Buffer.from(fileData.content, "base64").toString("utf-8");
+          const content = Buffer.from(fileData.content, "base64").toString(
+            "utf-8",
+          );
           const manifest = JSON.parse(content);
 
           projects.push({
@@ -71,14 +77,21 @@ async function fetchProjects() {
             priority: manifest.priority ?? 0,
             relatedTILIds: manifest.relatedTILIds || [],
           });
-          
-          console.log(`[sync-projects]   -> Successfully parsed manifest for ${repo.name}`);
+
+          console.log(
+            `[sync-projects]   -> Successfully parsed manifest for ${repo.name}`,
+          );
         }
       } catch (err) {
         if (err.status === 404) {
-          console.log(`[sync-projects]   -> No .debatreya manifest found in ${repo.name}. Skipping...`);
+          console.log(
+            `[sync-projects]   -> No .debatreya manifest found in ${repo.name}. Skipping...`,
+          );
         } else {
-          console.error(`[sync-projects]   -> Error fetching manifest for ${repo.name}:`, err.message);
+          console.error(
+            `[sync-projects]   -> Error fetching manifest for ${repo.name}:`,
+            err.message,
+          );
         }
       }
     }
@@ -91,10 +104,12 @@ async function fetchProjects() {
     await fs.writeFile(
       path.join(DATA_DIR, "projects.json"),
       JSON.stringify(projects, null, 2),
-      "utf-8"
+      "utf-8",
     );
 
-    console.log(`[sync-projects] Successfully saved ${projects.length} projects to src/data/projects.json`);
+    console.log(
+      `[sync-projects] Successfully saved ${projects.length} projects to src/data/projects.json`,
+    );
   } catch (err) {
     console.error(`[sync-projects] Fatal Error:`, err);
     process.exit(1);

@@ -77,11 +77,11 @@ export function CommandPalette({ children }: { children: React.ReactNode }) {
   return (
     <KBarProvider actions={actions}>
       <KBarPortal>
-        <KBarPositioner className="z-[100] bg-black/50 backdrop-blur-sm px-4 flex items-start justify-center pt-[20vh]">
-          <KBarAnimator className="w-full max-w-xl bg-background border rounded-2xl shadow-2xl overflow-hidden">
+        <KBarPositioner className="z-[100] bg-black/60 backdrop-blur-sm px-4 flex items-start justify-center pt-[20vh]">
+          <KBarAnimator className="w-full max-w-2xl bg-[#121415] border border-primary/20 rounded-xl shadow-2xl overflow-hidden ring-1 ring-white/5">
             <KBarSearch
-              className="w-full px-6 py-4 text-lg bg-transparent border-b outline-none text-foreground placeholder-muted-foreground"
-              defaultPlaceholder="Type a command or search..."
+              className="w-full px-6 py-4 text-base font-mono bg-transparent border-b border-white/5 outline-none text-foreground placeholder-muted-foreground focus:ring-0"
+              defaultPlaceholder="_"
             />
             <RenderResults />
           </KBarAnimator>
@@ -93,22 +93,22 @@ export function CommandPalette({ children }: { children: React.ReactNode }) {
 }
 
 function RenderResults() {
-  const { results, rootActionId } = useMatches();
+  const { results } = useMatches();
 
   return (
     <KBarResults
       items={results}
       onRender={({ item, active }) =>
         typeof item === "string" ? (
-          <div className="px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+          <div className="px-5 py-3 text-[10px] font-bold font-mono text-muted-foreground uppercase tracking-widest mt-2 border-b border-white/5">
             {item}
           </div>
         ) : (
           <div
-            className={`px-4 py-3 flex items-center justify-between cursor-pointer transition-colors ${
+            className={`px-5 py-3 flex items-center justify-between cursor-pointer transition-colors border-l-2 border-transparent ${
               active
-                ? "bg-accent text-accent-foreground"
-                : "text-foreground hover:bg-muted"
+                ? "bg-primary/10 border-l-primary text-primary"
+                : "text-foreground hover:bg-muted/50"
             }`}
           >
             <div className="flex items-center gap-2">
@@ -123,11 +123,11 @@ function RenderResults() {
               </div>
             </div>
             {item.shortcut?.length ? (
-              <div className="flex gap-1">
+              <div className="flex gap-1.5 opacity-50">
                 {item.shortcut.map((sc) => (
                   <kbd
                     key={sc}
-                    className="px-2 py-1 text-xs font-medium bg-background border rounded text-muted-foreground"
+                    className="px-1.5 py-0.5 min-w-[20px] text-[10px] font-mono flex items-center justify-center bg-white/5 border border-white/10 rounded-sm text-muted-foreground uppercase"
                   >
                     {sc}
                   </kbd>

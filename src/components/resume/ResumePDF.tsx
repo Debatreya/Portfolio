@@ -22,15 +22,17 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   name: {
-    fontSize: 24,
+    fontSize: 26,
     fontFamily: "Helvetica-Bold",
-    marginBottom: 4,
-    color: "#111",
+    marginBottom: 6,
+    color: "#000",
+    lineHeight: 1.2,
   },
   role: {
     fontSize: 12,
-    color: "#666",
-    marginBottom: 8,
+    color: "#444",
+    marginBottom: 10,
+    lineHeight: 1.2,
   },
   contact: {
     flexDirection: "row",
@@ -146,8 +148,8 @@ export const ResumePDF = () => {
                 </View>
                 <Text style={styles.jobDate}>{job.duration}</Text>
               </View>
-              {job.description.map((desc, i) => (
-                <View key={i} style={styles.bulletPoint}>
+              {job.description.map((desc) => (
+                <View key={desc} style={styles.bulletPoint}>
                   <Text style={styles.bullet}>•</Text>
                   <Text style={styles.bulletText}>{desc}</Text>
                 </View>
@@ -165,8 +167,8 @@ export const ResumePDF = () => {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Education</Text>
-          {education.map((edu, idx) => (
-            <View key={idx} style={styles.jobBlock}>
+          {education.map((edu) => (
+            <View key={edu.institution} style={styles.jobBlock}>
               <View style={styles.jobHeader}>
                 <Text style={styles.jobTitle}>{edu.institution}</Text>
                 <Text style={styles.jobDate}>{edu.duration}</Text>
