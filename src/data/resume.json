@@ -1,0 +1,100 @@
+{
+  "profile": {
+    "name": "Debatreya Das",
+    "role": "Full Stack Engineer & SDE Intern",
+    "availability": "available",
+    "location": "Bankura, West Bengal",
+    "bio": "Final year CSE student at NIT Kurukshetra with experience at Microsoft and Samagra. Passionate about systems, distributed scaling, and building developer tools.",
+    "avatarUrl": "/assets/avatar.jpg",
+    "socials": {
+      "github": "https://github.com/Debatreya",
+      "linkedin": "https://www.linkedin.com/in/debatreya-das-895517204",
+      "email": "debatreyadas@gmail.com",
+      "calendar": "https://cal.com/debatreya"
+    }
+  },
+  "work": [
+    {
+      "id": "microsoft-2025",
+      "company": "Microsoft",
+      "position": "SDE Intern",
+      "location": "Hyderabad, India",
+      "duration": "June 2025 - Aug 2025",
+      "description": [
+        "Automated Monthly Qualitative Reports for team services using Power Automate and Power BI.",
+        "Designed detailed documentation for system extensibility and added AI-powered future scopes."
+      ],
+      "techStack": [
+        "Power Automate",
+        "Power BI",
+        "System Architecture",
+        "AI Integration"
+      ],
+      "slug": "microsoft-internship"
+    },
+    {
+      "id": "flywheel-2025",
+      "company": "Flywheel",
+      "position": "SDE Intern",
+      "location": "Remote",
+      "duration": "Jan 2025 - May 2025",
+      "description": [
+        "Developed a custom CAPTCHA solver using Pytesseract for an automated web scraper.",
+        "Built a Python-based backend to parse documents into searchable schemas using various ML models."
+      ],
+      "techStack": ["Python", "Pytesseract", "Web Scraping", "ML Parsing"],
+      "slug": "flywheel-sde-intern"
+    },
+    {
+      "id": "samagra-2024",
+      "company": "Samagra Transforming Governance",
+      "position": "Open Source Contributor (C4GT)",
+      "location": "Remote",
+      "duration": "2024",
+      "description": [
+        "Built v0 of BHASAI: Conversational Forms from scratch for AI-driven user interactions.",
+        "Authored a test suite of 500+ unit tests using Jest for the OIDC Lite authentication mechanism."
+      ],
+      "techStack": ["Node.js", "Jest", "OIDC", "AI Conversational UI"],
+      "slug": "c4gt-samagra"
+    },
+    {
+      "id": "issac-nitkkr",
+      "company": "ISSAC NIT Kurukshetra",
+      "position": "Developer",
+      "location": "Kurukshetra, Haryana",
+      "duration": "2023 - Present",
+      "description": [
+        "Contributed to institute software applications and official website development as part of the core club team."
+      ],
+      "techStack": ["Web Development", "Team Collaboration"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "National Institute of Technology, Kurukshetra",
+      "degree": "Bachelor of Technology in Computer Science",
+      "duration": "2022 - 2026",
+      "grade": "9.57 CGPA (7th Sem)"
+    },
+    {
+      "institution": "Vivekananda Siksha Niketan High School",
+      "degree": "Higher Secondary",
+      "duration": "2022",
+      "grade": "96.6%"
+    }
+  ],
+  "skills": {
+    "languages": ["TypeScript", "JavaScript", "C++", "Python", "Go", "Java"],
+    "frameworks": [
+      "Next.js",
+      "React",
+      "Node.js",
+      "Express",
+      "Nest.JS",
+      "Tailwind CSS"
+    ],
+    "tools": ["Git/GitHub", "Docker", "Linux Terminal", "Redis", "Firebase"],
+    "databases": ["PostgreSQL", "MongoDB"]
+  }
+}

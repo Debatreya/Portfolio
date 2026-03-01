@@ -1,0 +1,53 @@
+[
+  {
+    "id": "bhasai-ai-forms",
+    "name": "BHASAI: Conversational Forms",
+    "tagline": "AI-driven conversational inputs for dynamic forms.",
+    "description": "Built v0 of BHASAI from scratch to streamline data entry via AI chat interfaces for Samagra Governance.",
+    "techStack": ["Node.js", "React", "AI", "OIDC"],
+    "links": {
+      "github": "https://github.com/Samagra-Development/BHASAI",
+      "demo": ""
+    },
+    "stats": {
+      "stars": 42,
+      "lastCommit": "2024-10-15T12:00:00Z"
+    },
+    "featured": true,
+    "priority": 10
+  },
+  {
+    "id": "automated-captcha-solver",
+    "name": "Flywheel Custom Captcha Solver",
+    "tagline": "Pytesseract-based automated ML parser",
+    "description": "Developed a custom CAPTCHA solver using Python and Pytesseract as part of an automated web scraping infrastructure.",
+    "techStack": ["Python", "Pytesseract", "Web Scraping", "ML"],
+    "links": {
+      "github": "https://github.com/Debatreya/captcha-solver",
+      "demo": ""
+    },
+    "stats": {
+      "stars": 15,
+      "lastCommit": "2025-02-20T08:30:00Z"
+    },
+    "featured": true,
+    "priority": 8
+  },
+  {
+    "id": "portfolio-os",
+    "name": "debatreyadas.dev",
+    "tagline": "A Manifest-Driven Developer OS",
+    "description": "Zero-maintenance, data-driven portfolio syncing work from GitHub and local JSON sources to present a professional identity.",
+    "techStack": ["Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui"],
+    "links": {
+      "github": "https://github.com/Debatreya/portfolio",
+      "demo": "https://debatreyadas.dev"
+    },
+    "stats": {
+      "stars": 3,
+      "lastCommit": "2026-03-01T10:00:00Z"
+    },
+    "featured": true,
+    "priority": 5
+  }
+]

@@ -5,7 +5,7 @@ This project, **debatreyadas.dev** is a "Manifest-Driven Developer OS." It is a 
 
 ## 2. Tech Stack Constraints
 
-* **Framework:** Next.js 14+ (App Router).
+* **Framework:** Next.js latest (App Router).
 * **Language:** TypeScript (Strict Mode).
 * **Styling:** Tailwind CSS + shadcn/ui components.
 * **State/Data:** Server Components primarily; ISR (Incremental Static Regeneration) for data fetching.
@@ -26,6 +26,14 @@ This project, **debatreyadas.dev** is a "Manifest-Driven Developer OS." It is a 
 * **Discovery:** Crawl repos with the topic `portfolio`.
 * **Manifest:** Each repo MUST contain a `.debatreya` JSON file with metadata (title, tagline, techStack).
 * **Output:** Generates `/src/data/projects.json` during build time.
+
+#### Detailed Steps
+###### Project Discovery Engine:
+
+* **Mechanism**: Next.js Server-side fetching with ISR.
+***Logic**: A getProjects() utility fetches all repositories via GitHub REST/GraphQL API filtered by the portfolio topic.
+* **Manifest Extraction**: For each repo, it fetches the HEAD:.debatreya file and parses it into the ProjectManifest type.
+* **Caching**: Use next: { revalidate: 86400 } (24 hours) to keep the data fresh without hitting API limits.
 
 ### C. The Knowledge Base (TILs/Blogs)
 
