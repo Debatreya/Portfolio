@@ -1,0 +1,14 @@
+{
+  "id": "portfolio-os",
+  "name": "debatreyadas.dev",
+  "tagline": "A Manifest-Driven Developer OS",
+  "description": "My personal portfolio built with Next.js and Tailwind CSS...",
+  "techStack": ["Next.js", "TypeScript", "Tailwind CSS", "Quarto", "KaTeX"],
+  "links": {
+    "github": "https://github.com/Debatreya/portfolio",
+    "demo": "https://debatreyadas.dev"
+  },
+  "featured": true,
+  "priority": 100,
+  "hasDeepDive": true 
+}
