@@ -1,10 +1,10 @@
-import { getGithubEvents } from "@/lib/github";
-import { getRemoteTILs } from "@/lib/content";
 import { NextResponse } from "next/server";
+import { getRemoteTILs } from "@/lib/content";
+import { getGithubEvents } from "@/lib/github";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const page = parseInt(searchParams.get("page") || "1");
+  const page = parseInt(searchParams.get("page") || "1", 10);
   const typesParam = searchParams.get("types");
   const types = typesParam ? typesParam.split(",") : null;
   const perPage = 10;

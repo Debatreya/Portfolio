@@ -1,14 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
+  DialogTitle,
 } from "@/components/ui/dialog";
-import { useEffect, useState } from "react";
 
 export function ProjectModalWrapper({
   children,

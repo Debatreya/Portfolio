@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { Code2, Star, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Code2, Star } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -12,7 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 interface ProjectGridProps {

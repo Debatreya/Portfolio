@@ -4,7 +4,6 @@ import {
   ArrowUpRight,
   Calendar,
   Clock,
-  Eye,
   FileCode,
   Folder,
   Info,
@@ -16,14 +15,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import type React from "react";
+import rehypeHighlight from "rehype-highlight";
+import rehypeKatex from "rehype-katex";
+import remarkMath from "remark-math";
 import { Badge } from "@/components/ui/badge";
 import { getRemoteTILById, getRemoteTILs } from "@/lib/content";
 import { getProjects } from "@/lib/github";
-import { cn } from "@/lib/utils";
-
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import rehypeHighlight from "rehype-highlight";
 import "katex/dist/katex.min.css";
 
 // Custom components moved inside TilPost to access local data
@@ -107,7 +104,9 @@ export default async function TilPost({
             <div className="flex items-center gap-2">
               <FileCode className="w-3.5 h-3.5 text-muted-foreground" />
               <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
-                {(props as any).filename || post.code_filename || "Code Block"}
+                {(props as { filename?: string }).filename ||
+                  post.code_filename ||
+                  "Code Block"}
               </span>
             </div>
             <MoreHorizontal className="w-3.5 h-3.5 text-muted-foreground" />
@@ -122,6 +121,8 @@ export default async function TilPost({
     a: (props: React.ComponentPropsWithoutRef<"a">) => (
       <a
         className="text-primary hover:text-primary/80 underline decoration-primary/30 underline-offset-4 transition-colors font-medium text-lg"
+        target={props.href?.startsWith("http") ? "_blank" : undefined}
+        rel={props.href?.startsWith("http") ? "noopener noreferrer" : undefined}
         {...props}
       />
     ),
@@ -309,14 +310,14 @@ export default async function TilPost({
             </div>
             <div className="flex items-center -space-x-2">
               {avatarUrls.length > 0 ? (
-                avatarUrls.map((url, i) => (
+                avatarUrls.map((url) => (
                   <div
-                    key={i}
+                    key={url}
                     className="w-8 h-8 rounded-full border-2 border-[#121415] bg-muted overflow-hidden flex items-center justify-center"
                   >
                     <img
                       src={url}
-                      alt="Contributor"
+                      alt="Avatar"
                       className="w-full h-full object-cover"
                     />
                   </div>

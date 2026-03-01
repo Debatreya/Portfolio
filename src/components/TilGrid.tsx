@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { format } from "date-fns";
 import Link from "next/link";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -62,14 +62,15 @@ export function TilGrid({ posts }: TilGridProps) {
           </h2>
           <nav className="flex flex-col gap-1">
             {categories.map((cat) => (
-              <div
+              <button
+                type="button"
                 key={cat.name}
                 onClick={() => {
                   setActiveCategory(cat.name);
                   setActiveTag(null); // Clear tag when switching category
                 }}
                 className={cn(
-                  "flex items-center justify-between px-4 py-2 text-sm rounded-md cursor-pointer transition-all",
+                  "flex items-center justify-between px-4 py-2 text-sm rounded-md cursor-pointer transition-all border-none outline-none w-full",
                   activeCategory === cat.name
                     ? "bg-primary text-black font-bold"
                     : "text-muted-foreground hover:bg-white/5 hover:text-foreground",
@@ -86,7 +87,7 @@ export function TilGrid({ posts }: TilGridProps) {
                 >
                   {cat.count}
                 </span>
-              </div>
+              </button>
             ))}
           </nav>
         </div>
@@ -97,22 +98,28 @@ export function TilGrid({ posts }: TilGridProps) {
           </h2>
           <div className="flex flex-wrap gap-2 px-4">
             {uniqueTags.map((tag) => (
-              <Badge
+              <button
+                type="button"
                 key={tag}
-                variant={activeTag === tag ? "default" : "outline"}
                 onClick={() => setActiveTag(activeTag === tag ? null : tag)}
-                className={cn(
-                  "text-[10px] font-mono border-white/10 cursor-pointer rounded-sm px-2 py-1 uppercase transition-all",
-                  activeTag === tag
-                    ? "bg-primary text-black border-primary"
-                    : "bg-transparent text-muted-foreground hover:border-primary/50 hover:text-primary",
-                )}
+                className="border-none p-0 bg-transparent outline-none"
               >
-                #{tag}
-              </Badge>
+                <Badge
+                  variant={activeTag === tag ? "default" : "outline"}
+                  className={cn(
+                    "text-[10px] font-mono border-white/10 cursor-pointer rounded-sm px-2 py-1 uppercase transition-all",
+                    activeTag === tag
+                      ? "bg-primary text-black border-primary"
+                      : "bg-transparent text-muted-foreground hover:border-primary/50 hover:text-primary",
+                  )}
+                >
+                  #{tag}
+                </Badge>
+              </button>
             ))}
             {activeTag && (
               <button
+                type="button"
                 onClick={() => setActiveTag(null)}
                 className="text-[9px] font-mono text-primary hover:underline uppercase tracking-widest mt-2"
               >
@@ -146,6 +153,7 @@ export function TilGrid({ posts }: TilGridProps) {
                 {activeTag || "NONE"}] yielded zero hits.
               </p>
               <button
+                type="button"
                 onClick={() => {
                   setActiveCategory("All Logs");
                   setActiveTag(null);

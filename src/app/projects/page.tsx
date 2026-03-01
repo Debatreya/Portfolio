@@ -1,5 +1,5 @@
-import { getProjects } from "@/lib/github";
 import { ProjectGrid } from "@/components/ProjectGrid";
+import { getProjects } from "@/lib/github";
 
 export const revalidate = 86400; // Refresh data daily
 

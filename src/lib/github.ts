@@ -1,5 +1,5 @@
 import { Octokit } from "octokit";
-import { ProjectManifest } from "@/types/portfolio";
+import type { ProjectManifest } from "@/types/portfolio";
 
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
@@ -182,7 +182,7 @@ export async function getGithubEvents(page = 1, per_page = 30) {
             const prNumber: number | undefined = payload.number ?? pr?.number;
 
             // Resolve title: Events API may truncate the PR object for org repos
-            let prTitle: string =
+            const prTitle: string =
               pr?.title ||
               (prNumber
                 ? await getPRTitle(event.repo.name, prNumber)

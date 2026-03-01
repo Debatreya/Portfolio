@@ -1,9 +1,9 @@
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { ProjectContent } from "@/components/ProjectContent";
 import { getProjectDeepDive } from "@/lib/content";
 import { getProjects } from "@/lib/github";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { ProjectContent } from "@/components/ProjectContent";
 
 export async function generateStaticParams() {
   const projects = await getProjects();

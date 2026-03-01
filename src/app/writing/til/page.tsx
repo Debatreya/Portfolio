@@ -1,5 +1,5 @@
-import { getRemoteTILs } from "@/lib/content";
 import { TilGrid } from "@/components/TilGrid";
+import { getRemoteTILs } from "@/lib/content";
 
 export const revalidate = 86400; // Refresh data daily
 

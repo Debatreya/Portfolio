@@ -1,21 +1,28 @@
+import { formatDistanceToNow } from "date-fns";
+import { ArrowUpRight, Clock, Code2, Star } from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import {
-  Calendar,
-  Github,
-  ExternalLink,
-  Code2,
-  Star,
-  Clock,
-  Users,
-  ArrowUpRight,
-} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { format, formatDistanceToNow } from "date-fns";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import Link from "next/link";
 
 interface ProjectContentProps {
-  project: any;
+  project: {
+    id?: string;
+    name?: string;
+    tagline?: string;
+    description?: string;
+    content?: string;
+    techStack?: string[];
+    featured?: boolean;
+    contributor_avatars?: string[];
+    stats?: {
+      stars?: number;
+      lastCommit?: string;
+    };
+    links?: {
+      github?: string;
+      demo?: string;
+    };
+  };
   isModal?: boolean;
 }
 
@@ -34,14 +41,14 @@ export function ProjectContent({ project, isModal }: ProjectContentProps) {
           </div>
 
           <div className="ml-auto flex -space-x-2">
-            {project.contributor_avatars?.map((avatar: string, i: number) => (
+            {project.contributor_avatars?.map((avatar: string) => (
               <div
-                key={i}
+                key={avatar}
                 className="w-6 h-6 rounded-full border border-background bg-muted overflow-hidden"
               >
                 <img
                   src={avatar}
-                  alt="contributor"
+                  alt="Contributor Avatar"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -91,6 +98,7 @@ export function ProjectContent({ project, isModal }: ProjectContentProps) {
                 <a
                   href={project.links.github}
                   target="_blank"
+                  rel="noopener noreferrer"
                   className="text-xs font-mono hover:text-primary transition-colors flex items-center gap-1 uppercase"
                 >
                   Github <ArrowUpRight className="w-2.5 h-2.5" />
@@ -108,6 +116,7 @@ export function ProjectContent({ project, isModal }: ProjectContentProps) {
                 <a
                   href={project.links.demo}
                   target="_blank"
+                  rel="noopener noreferrer"
                   className="text-xs font-mono hover:text-primary transition-colors flex items-center gap-1 uppercase"
                 >
                   Demo <ArrowUpRight className="w-2.5 h-2.5" />

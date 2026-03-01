@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import { Octokit } from "octokit";
-import type { Post, ProjectManifest } from "@/types/portfolio";
+import type { Post } from "@/types/portfolio";
 
 import { getProjects } from "./github";
 

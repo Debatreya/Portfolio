@@ -1,21 +1,21 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
 import { formatDistanceToNow } from "date-fns";
 import {
   BookOpen,
-  Clock,
-  GitPullRequest,
-  PlusCircle,
-  GitCommit,
-  MessageSquare,
-  GitMerge,
-  Loader2,
   ChevronDown,
+  Clock,
+  GitCommit,
+  GitMerge,
+  GitPullRequest,
+  Loader2,
+  MessageSquare,
+  PlusCircle,
 } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 type EventType = "TIL" | "PR" | "COMMIT" | "ISSUE" | "REPO" | "MERGE" | "OTHER";
@@ -31,7 +31,7 @@ interface ActivityItem {
 
 const TYPE_CONFIG: Record<
   EventType,
-  { icon: any; color: string; label: string }
+  { icon: React.ElementType; color: string; label: string }
 > = {
   TIL: { icon: BookOpen, color: "text-blue-500", label: "TIL" },
   PR: { icon: GitPullRequest, color: "text-emerald-500", label: "PR" },
@@ -53,38 +53,38 @@ export function PulseFeed() {
     "MERGE",
   ]);
 
-  const fetchActivities = async (
-    pageNum: number,
-    currentFilters: EventType[],
-  ) => {
-    try {
-      const typesQuery =
-        currentFilters.length > 0 ? `&types=${currentFilters.join(",")}` : "";
-      const res = await fetch(`/api/events?page=${pageNum}${typesQuery}`);
-      const data = await res.json();
+  const fetchActivities = useCallback(
+    async (pageNum: number, currentFilters: EventType[]) => {
+      try {
+        const typesQuery =
+          currentFilters.length > 0 ? `&types=${currentFilters.join(",")}` : "";
+        const res = await fetch(`/api/events?page=${pageNum}${typesQuery}`);
+        const data = await res.json();
 
-      // Update hasMore based on server response
-      setHasMore(data.hasMore || false);
+        // Update hasMore based on server response
+        setHasMore(data.hasMore || false);
 
-      if (pageNum === 1) {
-        setActivities(data.events || []);
-      } else {
-        setActivities((prev) => [...prev, ...(data.events || [])]);
+        if (pageNum === 1) {
+          setActivities(data.events || []);
+        } else {
+          setActivities((prev) => [...prev, ...(data.events || [])]);
+        }
+      } catch (err) {
+        console.error("Failed to fetch activities:", err);
+        setHasMore(false);
+      } finally {
+        setLoading(false);
+        setLoadingMore(false);
       }
-    } catch (err) {
-      console.error("Failed to fetch activities:", err);
-      setHasMore(false);
-    } finally {
-      setLoading(false);
-      setLoadingMore(false);
-    }
-  };
+    },
+    [],
+  );
 
   useEffect(() => {
     setLoading(true);
     setPage(1);
     fetchActivities(1, activeFilters);
-  }, [activeFilters]);
+  }, [activeFilters, fetchActivities]);
 
   const toggleFilter = (type: EventType) => {
     setActiveFilters((prev) =>
@@ -125,6 +125,7 @@ export function PulseFeed() {
             const isActive = activeFilters.includes(type);
             return (
               <button
+                type="button"
                 key={type}
                 onClick={() => toggleFilter(type)}
                 className={cn(
@@ -158,12 +159,12 @@ export function PulseFeed() {
               </p>
             </div>
           ) : (
-            filteredActivities.map((item, idx) => {
+            filteredActivities.map((item) => {
               const config = TYPE_CONFIG[item.type] || TYPE_CONFIG.OTHER;
               const Icon = config.icon;
 
               return (
-                <div key={`${item.id}-${idx}`} className="relative pl-8 group">
+                <div key={item.id} className="relative pl-8 group">
                   {/* Timeline dot */}
                   <span
                     className={cn(
@@ -197,6 +198,9 @@ export function PulseFeed() {
                     <a
                       href={item.link}
                       target={item.type === "TIL" ? "_self" : "_blank"}
+                      rel={
+                        item.type === "TIL" ? undefined : "noopener noreferrer"
+                      }
                       className="text-sm font-bold text-foreground/90 group-hover:text-primary transition-colors leading-snug max-w-md block"
                     >
                       {item.title}

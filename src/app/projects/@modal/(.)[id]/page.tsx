@@ -1,7 +1,7 @@
-import { getProjectDeepDive } from "@/lib/content";
+import { notFound } from "next/navigation";
 import { ProjectContent } from "@/components/ProjectContent";
 import { ProjectModalWrapper } from "@/components/ProjectModalWrapper";
-import { notFound } from "next/navigation";
+import { getProjectDeepDive } from "@/lib/content";
 
 export default async function ProjectModalPage({
   params,
