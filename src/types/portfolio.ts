@@ -86,6 +86,9 @@ export interface ProjectManifest {
   priority: number; // Higher number = shown first
   relatedTILIds?: string[];
   hasDeepDive?: boolean;
+  contributor_avatars?: string[];
+  code_filename?: string;
+  system_manifest?: string;
 }
 
 /**

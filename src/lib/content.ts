@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import { Octokit } from "octokit";
-import type { Post } from "@/types/portfolio";
+import type { Post, ProjectManifest } from "@/types/portfolio";
 
 import { getProjects } from "./github";
 
@@ -28,9 +28,9 @@ export function getPostsByType(type: "til" | "blog" | "experience"): Post[] {
   const fileNames = fs.readdirSync(directory);
 
   const posts = fileNames
-    .filter((fileName) => fileName.endsWith(".md") || fileName.endsWith(".mdx"))
+    .filter((fileName) => fileName.endsWith(".md") || fileName.endsWith(".mdx") || fileName.endsWith(".qmd"))
     .map((fileName) => {
-      const id = fileName.replace(/\.mdx?$/, "");
+      const id = fileName.replace(/\.(mdx?|qmd)$/, "");
       const fullPath = path.join(directory, fileName);
       const fileContents = fs.readFileSync(fullPath, "utf8");
       const { data, content } = matter(fileContents);
@@ -58,15 +58,18 @@ export function getPostById(
   id: string,
 ): Post | null {
   try {
-    const mdPath = path.join(CONTENT_DIR, type, `${id}.md`);
-    const mdxPath = path.join(CONTENT_DIR, type, `${id}.mdx`);
-
-    let fullPath = mdPath;
-    if (!fs.existsSync(fullPath)) {
-      fullPath = mdxPath;
-      if (!fs.existsSync(fullPath)) {
-        return null; // Return null if neither .md nor .mdx exists
+    const possibleExtensions = [".md", ".mdx", ".qmd"];
+    let fullPath = "";
+    for (const ext of possibleExtensions) {
+      const p = path.join(CONTENT_DIR, type, `${id}${ext}`);
+      if (fs.existsSync(p)) {
+        fullPath = p;
+        break;
       }
+    }
+
+    if (!fullPath) {
+      return null;
     }
 
     const fileContents = fs.readFileSync(fullPath, "utf8");
@@ -182,18 +185,29 @@ export async function getRemoteTILById(id: string): Promise<Post | null> {
   return allPosts.find((p) => p.id === id) || null;
 }
 
-export async function getProjectDeepDive(id: string) {
+export async function getProjectDeepDive(
+  id: string,
+): Promise<(ProjectManifest & { content: string }) | null> {
   // 1. Get the base manifest and stats from GitHub first (to ensure matching IDs)
   const allProjects = await getProjects();
   const baseProject = allProjects.find((p) => p.id === id);
 
   const directory = path.join(CONTENT_DIR, "projects");
-  const fullPath = path.join(directory, `${id}.md`);
+
+  const possibleExtensions = [".md", ".qmd", ".mdx"];
+  let fullPath = "";
+  for (const ext of possibleExtensions) {
+    const p = path.join(directory, `${id}${ext}`);
+    if (fs.existsSync(p)) {
+      fullPath = p;
+      break;
+    }
+  }
 
   let localContent = "";
   let localData = {};
 
-  if (fs.existsSync(fullPath)) {
+  if (fullPath) {
     const fileContents = fs.readFileSync(fullPath, "utf8");
     const { data, content } = matter(fileContents);
     localContent = content;
@@ -206,9 +220,16 @@ export async function getProjectDeepDive(id: string) {
 
   // Merge: GitHub Manifest (Source of truth for links/stats) + Local MDX Content
   return {
+    name: id,
+    tagline: "",
+    description: "",
+    techStack: [],
+    links: { github: "" },
+    featured: false,
+    priority: 0,
     ...baseProject,
     ...localData,
     content: localContent,
     id,
-  };
+  } as ProjectManifest & { content: string };
 }
