@@ -1,0 +1,18 @@
+import { headers } from "next/headers";
+import type { MetadataRoute } from "next";
+
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const headersList = await headers();
+  const host = headersList.get("host") || "debatreya.dev";
+  const protocol = headersList.get("x-forwarded-proto") || "https";
+  const baseUrl = `${protocol}://${host}`;
+
+  return {
+    rules: {
+      userAgent: "*",
+      allow: "/",
+      disallow: "/api/",
+    },
+    sitemap: `${baseUrl}/sitemap.xml`,
+  };
+}

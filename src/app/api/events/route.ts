@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { getRemoteTILs } from "@/lib/content";
 import { getGithubEvents } from "@/lib/github";
 
+export const revalidate = 3600; // Cache the event feed for 1 hour
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const page = parseInt(searchParams.get("page") || "1", 10);

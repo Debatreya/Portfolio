@@ -24,6 +24,7 @@ import { getProjects } from "@/lib/github";
 import "katex/dist/katex.min.css";
 
 // Custom components moved inside TilPost to access local data
+export const revalidate = 43200; // Refresh data every 12 hours
 
 export async function generateStaticParams() {
   const posts = await getRemoteTILs();

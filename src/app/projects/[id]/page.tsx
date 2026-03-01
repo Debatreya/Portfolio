@@ -5,6 +5,8 @@ import { ProjectContent } from "@/components/ProjectContent";
 import { getProjectDeepDive } from "@/lib/content";
 import { getProjects } from "@/lib/github";
 
+export const revalidate = 43200; // Refresh data every 12 hours
+
 export async function generateStaticParams() {
   const projects = await getProjects();
   return projects

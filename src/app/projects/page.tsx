@@ -1,7 +1,7 @@
 import { ProjectGrid } from "@/components/ProjectGrid";
 import { getProjects } from "@/lib/github";
 
-export const revalidate = 86400; // Refresh data daily
+export const revalidate = 43200; // Refresh data every 12 hours
 
 export default async function ProjectsPage() {
   const projectsData = await getProjects();
