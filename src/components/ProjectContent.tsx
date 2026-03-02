@@ -3,6 +3,7 @@ import { ArrowUpRight, Clock, Code2, FileCode, Info, MoreHorizontal, Star } from
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeHighlight from "rehype-highlight";
 import rehypeKatex from "rehype-katex";
+import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -117,6 +118,47 @@ export function ProjectContent({ project, isModal }: ProjectContentProps) {
     strong: (props: React.ComponentPropsWithoutRef<"strong">) => (
       <strong className="font-bold text-foreground" {...props} />
     ),
+    table: (props: React.ComponentPropsWithoutRef<"table">) => (
+      <div className="my-8 overflow-x-auto border border-white/10 rounded-lg overflow-hidden">
+        <table className="w-full border-collapse text-sm" {...props} />
+      </div>
+    ),
+    thead: (props: React.ComponentPropsWithoutRef<"thead">) => (
+      <thead className="bg-white/5 border-b border-white/10" {...props} />
+    ),
+    th: (props: React.ComponentPropsWithoutRef<"th">) => (
+      <th
+        className="px-6 py-4 text-left font-mono text-[10px] uppercase tracking-widest text-muted-foreground"
+        {...props}
+      />
+    ),
+    td: (props: React.ComponentPropsWithoutRef<"td">) => (
+      <td
+        className="px-6 py-4 border-b border-white/5 text-muted-foreground/90 leading-relaxed"
+        {...props}
+      />
+    ),
+    tr: (props: React.ComponentPropsWithoutRef<"tr">) => (
+      <tr className="hover:bg-white/[0.02] transition-colors" {...props} />
+    ),
+    img: (props: React.ComponentPropsWithoutRef<"img">) => {
+      const { src: originalSrc, alt, ...rest } = props;
+      const srcStr = typeof originalSrc === "string" ? originalSrc : "";
+      const isRelative = srcStr && !srcStr.startsWith("http") && !srcStr.startsWith("/");
+      const githubBase = `https://raw.githubusercontent.com/Debatreya/Debatreya-TIL-garden/master/`;
+      const finalSrc = isRelative ? `${githubBase}${srcStr}` : srcStr;
+      
+      return (
+        <div className="my-8 rounded-lg overflow-hidden border border-white/10 bg-white/5">
+          <img
+            {...rest}
+            src={finalSrc}
+            className="w-full h-auto object-cover max-h-[500px]"
+            alt={alt || "Project Image"}
+          />
+        </div>
+      );
+    },
   };
 
   const content = (
@@ -230,7 +272,7 @@ export function ProjectContent({ project, isModal }: ProjectContentProps) {
             components={mdxComponents}
             options={{
               mdxOptions: {
-                remarkPlugins: [remarkMath],
+                remarkPlugins: [remarkMath, remarkGfm],
                 rehypePlugins: [rehypeKatex, rehypeHighlight],
               },
             }}

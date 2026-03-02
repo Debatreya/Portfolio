@@ -83,3 +83,67 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Katex and Math Rendering */
+.katex-display {
+  display: block !important;
+  width: 100% !important;
+  text-align: center !important;
+  margin: 2.5rem 0 !important;
+  padding: 1.5rem 0 !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  color: var(--primary) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  background-color: rgba(255, 255, 255, 0.01) !important;
+}
+
+/* Force math (even if written as inline $) to a new line and center it */
+.prose .katex {
+  display: block !important;
+  text-align: center !important;
+  margin: 2rem auto !important;
+  width: 100% !important;
+  font-size: 1.15em !important;
+  color: var(--primary) !important;
+}
+
+/* Custom Table Styles in Prose */
+.prose table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+}
+
+.prose thead {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.prose th {
+  padding: 1rem 1.5rem !important;
+  text-align: left !important;
+  font-family: var(--font-mono) !important;
+  font-size: 10px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.15em !important;
+  color: var(--muted-foreground) !important;
+}
+
+.prose td {
+  padding: 1rem 1.5rem !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  line-height: 1.625 !important;
+}
+
+.prose tr:hover {
+  background-color: rgba(255, 255, 255, 0.02) !important;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition-duration: 150ms !important;
+}
