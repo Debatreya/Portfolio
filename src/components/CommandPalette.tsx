@@ -10,10 +10,12 @@ import {
   useMatches,
 } from "kbar";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import type React from "react";
 
 export function CommandPalette({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const { setTheme, resolvedTheme } = useTheme();
 
   const actions = [
     {
@@ -63,14 +65,7 @@ export function CommandPalette({ children }: { children: React.ReactNode }) {
       name: "Toggle Theme",
       shortcut: ["d"],
       keywords: "theme dark light mode",
-      perform: () => {
-        // Toggle theme logic will go here if needed to be exposed globally
-        // For now, next-themes system preference handles the default.
-        const currentTheme = document.documentElement.className.includes("dark")
-          ? "light"
-          : "dark";
-        document.documentElement.className = currentTheme;
-      },
+      perform: () => setTheme(resolvedTheme === "dark" ? "light" : "dark"),
     },
   ];
 
@@ -78,9 +73,9 @@ export function CommandPalette({ children }: { children: React.ReactNode }) {
     <KBarProvider actions={actions}>
       <KBarPortal>
         <KBarPositioner className="z-[100] bg-black/60 backdrop-blur-sm px-4 flex items-start justify-center pt-[20vh]">
-          <KBarAnimator className="w-full max-w-2xl bg-[#121415] border border-primary/20 rounded-xl shadow-2xl overflow-hidden ring-1 ring-white/5">
+          <KBarAnimator className="w-full max-w-2xl bg-background border border-border rounded-xl shadow-2xl overflow-hidden ring-1 ring-border">
             <KBarSearch
-              className="w-full px-6 py-4 text-base font-mono bg-transparent border-b border-white/5 outline-none text-foreground placeholder-muted-foreground focus:ring-0"
+              className="w-full px-6 py-4 text-base font-mono bg-transparent border-b border-border outline-none text-foreground placeholder-muted-foreground focus:ring-0"
               defaultPlaceholder="_"
             />
             <RenderResults />
@@ -100,7 +95,7 @@ function RenderResults() {
       items={results}
       onRender={({ item, active }) =>
         typeof item === "string" ? (
-          <div className="px-5 py-3 text-[10px] font-bold font-mono text-muted-foreground uppercase tracking-widest mt-2 border-b border-white/5">
+          <div className="px-5 py-3 text-[10px] font-bold font-mono text-muted-foreground uppercase tracking-widest mt-2 border-b border-border">
             {item}
           </div>
         ) : (
@@ -127,7 +122,7 @@ function RenderResults() {
                 {item.shortcut.map((sc) => (
                   <kbd
                     key={sc}
-                    className="px-1.5 py-0.5 min-w-[20px] text-[10px] font-mono flex items-center justify-center bg-white/5 border border-white/10 rounded-sm text-muted-foreground uppercase"
+                    className="px-1.5 py-0.5 min-w-[20px] text-[10px] font-mono flex items-center justify-center bg-muted border border-border rounded-sm text-muted-foreground uppercase"
                   >
                     {sc}
                   </kbd>

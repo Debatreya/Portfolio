@@ -102,9 +102,9 @@ export function PulseFeed() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-180px)] border border-white/5 bg-card/30 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-sm">
+    <div className="flex flex-col h-[calc(100vh-180px)] border border-border bg-card/30 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-sm">
       {/* Header & Filters */}
-      <div className="p-6 border-b border-white/5 space-y-4 bg-white/2">
+      <div className="p-6 border-b border-border space-y-4 bg-muted/20">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
@@ -131,8 +131,8 @@ export function PulseFeed() {
                 className={cn(
                   "px-3 py-1 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider transition-all border",
                   isActive
-                    ? "bg-primary text-black border-primary shadow-[0_0_10px_rgba(16,241,149,0.2)]"
-                    : "bg-white/5 text-muted-foreground border-white/5 hover:border-white/10",
+                    ? "bg-primary text-primary-foreground border-primary shadow-[0_0_10px_rgba(16,241,149,0.2)]"
+                    : "bg-muted text-muted-foreground border-border hover:border-muted-foreground/20",
                 )}
               >
                 {TYPE_CONFIG[type].label}
@@ -144,7 +144,7 @@ export function PulseFeed() {
 
       {/* Feed Area */}
       <ScrollArea className="flex-1 px-6 py-6 overflow-y-auto">
-        <div className="relative border-l border-white/5 ml-3 space-y-8 pb-10">
+        <div className="relative border-l border-border ml-3 space-y-8 pb-10">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 gap-3">
               <Loader2 className="w-6 h-6 text-primary animate-spin" />
@@ -177,7 +177,7 @@ export function PulseFeed() {
                     <div className="flex items-center gap-3">
                       <div
                         className={cn(
-                          "p-1.5 rounded-md bg-white/5 border border-white/5",
+                          "p-1.5 rounded-md bg-muted border border-border",
                           config.color,
                         )}
                       >
@@ -235,7 +235,7 @@ export function PulseFeed() {
       </ScrollArea>
 
       {/* Footer Status */}
-      <div className="px-6 py-3 bg-white/2 border-t border-white/5 flex items-center justify-between">
+      <div className="px-6 py-3 bg-muted/20 border-t border-border flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" />
           <span className="text-[8px] font-mono text-muted-foreground/50 uppercase tracking-widest">

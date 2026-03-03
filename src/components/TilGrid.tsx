@@ -55,7 +55,7 @@ export function TilGrid({ posts }: TilGridProps) {
   return (
     <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row gap-0 min-h-[calc(100vh-100px)]">
       {/* Sidebar - CATEGORIES & FILTER_MANIFEST */}
-      <aside className="w-full md:w-64 border-r border-white/5 pr-6 hidden md:flex flex-col gap-10 py-12">
+      <aside className="w-full md:w-64 border-r border-border pr-6 hidden md:flex flex-col gap-10 py-12">
         <div className="flex flex-col gap-4">
           <h2 className="text-[10px] font-bold font-mono text-muted-foreground uppercase tracking-widest pl-4">
             CATEGORIES
@@ -72,8 +72,8 @@ export function TilGrid({ posts }: TilGridProps) {
                 className={cn(
                   "flex items-center justify-between px-4 py-2 text-sm rounded-md cursor-pointer transition-all border-none outline-none w-full",
                   activeCategory === cat.name
-                    ? "bg-primary text-black font-bold"
-                    : "text-muted-foreground hover:bg-white/5 hover:text-foreground",
+                    ? "bg-primary text-primary-foreground font-bold"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
                 )}
               >
                 <span>{cat.name}</span>
@@ -81,7 +81,7 @@ export function TilGrid({ posts }: TilGridProps) {
                   className={cn(
                     "text-[10px] font-mono",
                     activeCategory === cat.name
-                      ? "text-black/70"
+                      ? "text-primary-foreground/70"
                       : "text-muted-foreground/50",
                   )}
                 >
@@ -107,9 +107,9 @@ export function TilGrid({ posts }: TilGridProps) {
                 <Badge
                   variant={activeTag === tag ? "default" : "outline"}
                   className={cn(
-                    "text-[10px] font-mono border-white/10 cursor-pointer rounded-sm px-2 py-1 uppercase transition-all",
+                    "text-[10px] font-mono border-border cursor-pointer rounded-sm px-2 py-1 uppercase transition-all",
                     activeTag === tag
-                      ? "bg-primary text-black border-primary"
+                      ? "bg-primary text-primary-foreground border-primary"
                       : "bg-transparent text-muted-foreground hover:border-primary/50 hover:text-primary",
                   )}
                 >
@@ -131,8 +131,8 @@ export function TilGrid({ posts }: TilGridProps) {
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 py-12 px-6 md:px-12 max-w-5xl border-l border-white/2">
-        <header className="flex flex-col gap-4 border-b border-white/5 pb-12 pt-0">
+      <div className="flex-1 py-12 px-6 md:px-12 max-w-5xl border-l border-border/50">
+        <header className="flex flex-col gap-4 border-b border-border pb-12 pt-0">
           <h1 className="text-4xl md:text-5xl font-black tracking-tighter font-sans text-foreground">
             TODAY_I_LEARNED
           </h1>
@@ -144,7 +144,7 @@ export function TilGrid({ posts }: TilGridProps) {
 
         <div className="flex flex-col gap-8 pt-8">
           {filteredPosts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-center gap-4 border border-dashed border-white/5 rounded-lg">
+            <div className="flex flex-col items-center justify-center py-20 text-center gap-4 border border-dashed border-border rounded-lg">
               <p className="text-muted-foreground italic font-mono text-sm uppercase tracking-widest">
                 [ NO_MATCHING_RECORDS_FOUND ]
               </p>
@@ -168,7 +168,7 @@ export function TilGrid({ posts }: TilGridProps) {
               <Link
                 key={post.id}
                 href={`/writing/til/${post.id}`}
-                className="group grid grid-cols-1 md:grid-cols-[120px_1fr_auto] items-center gap-6 py-6 border-b border-white/5 hover:bg-white/[0.02] transition-all -mx-4 px-4 rounded-lg relative overflow-hidden"
+                className="group grid grid-cols-1 md:grid-cols-[120px_1fr_auto] items-center gap-6 py-6 border-b border-border hover:bg-muted/30 transition-all -mx-4 px-4 rounded-lg relative overflow-hidden"
               >
                 <div className="absolute left-0 top-0 w-1 h-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
 
@@ -195,7 +195,7 @@ export function TilGrid({ posts }: TilGridProps) {
                 <div className="order-3 flex justify-end">
                   <Badge
                     variant="outline"
-                    className="text-[10px] font-mono rounded-none px-3 py-1 border-white/10 bg-white/5 text-muted-foreground group-hover:border-primary/50 group-hover:text-primary transition-all tracking-widest uppercase"
+                    className="text-[10px] font-mono rounded-none px-3 py-1 border-border bg-muted/50 text-muted-foreground group-hover:border-primary/50 group-hover:text-primary transition-all tracking-widest uppercase"
                   >
                     {post.category}
                   </Badge>
@@ -204,7 +204,7 @@ export function TilGrid({ posts }: TilGridProps) {
             ))
           )}
 
-          <div className="flex items-center justify-between mt-12 pt-6 border-t border-white/5">
+          <div className="flex items-center justify-between mt-12 pt-6 border-t border-border">
             <div className="flex items-center gap-4">
               <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest font-bold">
                 SYSTEM_HIT_COUNT: {filteredPosts.length}

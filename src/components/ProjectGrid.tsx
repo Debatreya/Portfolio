@@ -32,14 +32,14 @@ export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
   return (
     <div className="flex flex-col gap-10">
       {/* Tags Filter Strip */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-4 scrollbar-hide border-b border-white/5">
+      <div className="flex items-center gap-2 overflow-x-auto pb-4 scrollbar-hide border-b border-border">
         <Badge
           variant={activeTag === "All Projects" ? "default" : "outline"}
           className={cn(
             "whitespace-nowrap cursor-pointer transition-all px-4 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-widest",
             activeTag === "All Projects"
-              ? "bg-primary text-black"
-              : "text-muted-foreground hover:bg-white/5",
+              ? "bg-primary text-primary-foreground"
+              : "text-muted-foreground hover:bg-muted",
           )}
           onClick={() => setActiveTag("All Projects")}
         >
@@ -52,8 +52,8 @@ export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
             className={cn(
               "whitespace-nowrap cursor-pointer transition-all px-4 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-widest",
               activeTag === tag
-                ? "bg-primary text-black"
-                : "text-muted-foreground hover:bg-white/5",
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:bg-muted",
             )}
             onClick={() => setActiveTag(tag)}
           >
@@ -69,7 +69,7 @@ export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
             key={project.id}
             href={`/projects/${project.id}`}
             scroll={false}
-            className="flex flex-col group hover:-translate-y-1 transition-transform duration-300 border border-white/5 bg-card/50 hover:bg-card rounded-xl overflow-hidden shadow-lg"
+            className="flex flex-col group hover:-translate-y-1 transition-transform duration-300 border border-border bg-card/50 hover:bg-card rounded-xl overflow-hidden shadow-lg"
           >
             <Card className="border-0 bg-transparent flex flex-col h-full rounded-none">
               <CardHeader className="flex flex-col gap-2 pb-4">
@@ -121,7 +121,7 @@ export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
                   )}
                 </div>
               </CardContent>
-              <CardFooter className="pt-4 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
+              <CardFooter className="pt-4 border-t border-border flex items-center justify-between text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
                 <div className="flex items-center gap-1.5">
                   ID: {project.id.slice(0, 10)}
                 </div>
@@ -145,7 +145,7 @@ export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
 
       {filteredProjects.length === 0 && (
         <div className="py-20 text-center flex flex-col items-center gap-4">
-          <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center bg-white/5">
+          <div className="w-12 h-12 rounded-full border border-border flex items-center justify-center bg-muted">
             <Code2 className="w-6 h-6 text-muted-foreground" />
           </div>
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
