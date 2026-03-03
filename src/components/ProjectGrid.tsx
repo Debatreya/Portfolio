@@ -13,6 +13,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import type { ProjectManifest } from "@/types/portfolio";
 
@@ -32,6 +39,12 @@ export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
 
   const clearFilters = () => setSelectedTags([]);
 
+  const maxVisible = 12;
+  const selectedVisible = allTags.filter((tag) => selectedTags.includes(tag));
+  const remainingTags = allTags.filter((tag) => !selectedTags.includes(tag));
+  const visibleTags = [...selectedVisible, ...remainingTags].slice(0, maxVisible);
+  const showSeeMore = allTags.length > maxVisible;
+
   const filteredProjects =
     selectedTags.length === 0
       ? projects
@@ -42,45 +55,85 @@ export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
   return (
     <div className="flex flex-col gap-10">
       {/* Tags Filter Strip */}
-      <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-md pt-2 pb-6 border-b border-border flex items-center gap-3 overflow-x-auto scrollbar-hide">
-        <Badge
-          variant={selectedTags.length === 0 ? "default" : "outline"}
-          className={cn(
-            "whitespace-nowrap cursor-pointer transition-all px-4 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-widest",
-            selectedTags.length === 0
-              ? "bg-primary text-primary-foreground"
-              : "text-muted-foreground hover:bg-muted font-bold",
-          )}
-          onClick={clearFilters}
-        >
-          All Projects
-        </Badge>
-        <div className="w-px h-4 bg-border mx-1" />
-        {allTags.map((tag) => (
+      <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-md pt-4 pb-4 border-b border-border">
+        <div className="flex flex-wrap items-center gap-2 max-w-full">
           <Badge
-            key={tag}
-            variant={selectedTags.includes(tag) ? "default" : "outline"}
+            variant={selectedTags.length === 0 ? "default" : "outline"}
             className={cn(
-              "whitespace-nowrap cursor-pointer transition-all px-4 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-widest",
-              selectedTags.includes(tag)
-                ? "bg-primary text-primary-foreground shadow-[0_0_15px_rgba(20,241,149,0.2)]"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground",
+              "whitespace-nowrap cursor-pointer transition-all px-4 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-widest shrink-0",
+              selectedTags.length === 0
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:bg-muted font-bold",
             )}
-            onClick={() => toggleTag(tag)}
-          >
-            {tag}
-          </Badge>
-        ))}
-
-        {selectedTags.length > 0 && (
-          <button
-            type="button"
             onClick={clearFilters}
-            className="ml-4 text-[10px] font-mono text-primary hover:underline uppercase tracking-widest whitespace-nowrap"
           >
-            [ Clear All ]
-          </button>
-        )}
+            All Projects
+          </Badge>
+          <div className="w-px h-4 bg-border mx-1 shrink-0" />
+          
+          {visibleTags.map((tag) => (
+            <Badge
+              key={tag}
+              variant={selectedTags.includes(tag) ? "default" : "outline"}
+              className={cn(
+                "whitespace-nowrap cursor-pointer transition-all px-4 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-widest",
+                selectedTags.includes(tag)
+                  ? "bg-primary text-primary-foreground shadow-[0_0_15px_rgba(20,241,149,0.2)]"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground",
+              )}
+              onClick={() => toggleTag(tag)}
+            >
+              {tag}
+            </Badge>
+          ))}
+
+          {showSeeMore && (
+            <Dialog>
+              <DialogTrigger asChild>
+                <button
+                  type="button"
+                  className="px-4 py-1.5 rounded-full border border-border text-muted-foreground hover:bg-muted font-mono text-[10px] uppercase tracking-widest transition-all"
+                >
+                  + See More ({allTags.length - maxVisible})
+                </button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle className="font-mono uppercase tracking-[0.2em] text-sm">
+                    Filter by Technology
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4">
+                  {allTags.map((tag) => (
+                    <Badge
+                      key={tag}
+                      variant={selectedTags.includes(tag) ? "default" : "outline"}
+                      className={cn(
+                        "whitespace-nowrap cursor-pointer transition-all px-3 py-1.5 rounded-md font-mono text-[9px] uppercase tracking-widest justify-center",
+                        selectedTags.includes(tag)
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:bg-muted",
+                      )}
+                      onClick={() => toggleTag(tag)}
+                    >
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </DialogContent>
+            </Dialog>
+          )}
+
+          {selectedTags.length > 0 && (
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="ml-auto text-[10px] font-mono text-primary hover:underline uppercase tracking-widest whitespace-nowrap px-4"
+            >
+              [ CLEAR_ALL ]
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Projects Grid */}
