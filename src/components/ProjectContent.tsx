@@ -158,14 +158,14 @@ export function ProjectContent({ project, isModal }: ProjectContentProps) {
       const finalSrc = isRelative ? `${githubBase}${srcStr}` : srcStr;
 
       return (
-        <div className="my-8 rounded-lg overflow-hidden border border-white/10 bg-white/5">
+        <span className="block my-8 rounded-lg overflow-hidden border border-white/10 bg-white/5">
           <img
             {...rest}
             src={finalSrc}
             className="w-full h-auto object-cover max-h-[500px]"
             alt={alt || "Project Image"}
           />
-        </div>
+        </span>
       );
     },
   };
