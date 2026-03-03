@@ -154,18 +154,23 @@ export default async function ProjectDeepDive({
               <div className="flex items-center -space-x-1">
                 {project.contributor_avatars &&
                 project.contributor_avatars.length > 0 ? (
-                  project.contributor_avatars.map((url: string) => (
-                    <div
-                      key={url}
-                      className="w-8 h-8 rounded-full border-2 border-[#121415] bg-muted overflow-hidden flex items-center justify-center"
-                    >
-                      <img
-                        src={url}
-                        alt="Avatar"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  ))
+                  project.contributor_avatars.map((c: any) => {
+                    const name = typeof c === "string" ? "Contributor" : c.name;
+                    const avatar = typeof c === "string" ? c : c.avatar;
+                    return (
+                      <div
+                        key={avatar}
+                        className="w-8 h-8 rounded-full border-2 border-[#121415] bg-muted overflow-hidden flex items-center justify-center"
+                        title={name}
+                      >
+                        <img
+                          src={avatar}
+                          alt={name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    );
+                  })
                 ) : (
                   <div className="w-8 h-8 rounded-full border-2 border-[#121415] bg-muted overflow-hidden flex items-center justify-center">
                     <Users className="w-4 h-4 text-muted-foreground" />

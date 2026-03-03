@@ -28,7 +28,7 @@ interface ProjectContentProps {
     code_filename?: string;
     system_manifest?: string;
     featured?: boolean;
-    contributor_avatars?: string[];
+    contributor_avatars?: (string | { name: string; avatar: string })[];
     stats?: {
       stars?: number;
       lastCommit?: string;
@@ -184,18 +184,23 @@ export function ProjectContent({ project, isModal }: ProjectContentProps) {
           </div>
 
           <div className="ml-auto flex -space-x-2">
-            {project.contributor_avatars?.map((avatar: string) => (
-              <div
-                key={avatar}
-                className="w-6 h-6 rounded-full border border-background bg-muted overflow-hidden"
-              >
-                <img
-                  src={avatar}
-                  alt="Contributor Avatar"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            ))}
+            {project.contributor_avatars?.map((c) => {
+              const name = typeof c === "string" ? "Contributor" : c.name;
+              const avatar = typeof c === "string" ? c : c.avatar;
+              return (
+                <div
+                  key={avatar}
+                  className="w-6 h-6 rounded-full border border-background bg-muted overflow-hidden"
+                  title={name}
+                >
+                  <img
+                    src={avatar}
+                    alt={name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
 
