@@ -22,44 +22,65 @@ interface ProjectGridProps {
 }
 
 export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
-  const [activeTag, setActiveTag] = useState<string>("All Projects");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
+    );
+  };
+
+  const clearFilters = () => setSelectedTags([]);
 
   const filteredProjects =
-    activeTag === "All Projects"
+    selectedTags.length === 0
       ? projects
-      : projects.filter((p) => p.techStack?.includes(activeTag));
+      : projects.filter((p) =>
+          selectedTags.some((tag) => p.techStack?.includes(tag)),
+        );
 
   return (
     <div className="flex flex-col gap-10">
       {/* Tags Filter Strip */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-4 scrollbar-hide border-b border-border">
+      <div className="flex items-center gap-3 overflow-x-auto pb-4 scrollbar-hide border-b border-border">
         <Badge
-          variant={activeTag === "All Projects" ? "default" : "outline"}
+          variant={selectedTags.length === 0 ? "default" : "outline"}
           className={cn(
             "whitespace-nowrap cursor-pointer transition-all px-4 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-widest",
-            activeTag === "All Projects"
+            selectedTags.length === 0
               ? "bg-primary text-primary-foreground"
-              : "text-muted-foreground hover:bg-muted",
+              : "text-muted-foreground hover:bg-muted font-bold",
           )}
-          onClick={() => setActiveTag("All Projects")}
+          onClick={clearFilters}
         >
           All Projects
         </Badge>
+        <div className="w-px h-4 bg-border mx-1" />
         {allTags.map((tag) => (
           <Badge
             key={tag}
-            variant={activeTag === tag ? "default" : "outline"}
+            variant={selectedTags.includes(tag) ? "default" : "outline"}
             className={cn(
               "whitespace-nowrap cursor-pointer transition-all px-4 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-widest",
-              activeTag === tag
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:bg-muted",
+              selectedTags.includes(tag)
+                ? "bg-primary text-primary-foreground shadow-[0_0_15px_rgba(20,241,149,0.2)]"
+                : "text-muted-foreground hover:bg-muted hover:text-foreground",
             )}
-            onClick={() => setActiveTag(tag)}
+            onClick={() => toggleTag(tag)}
           >
             {tag}
           </Badge>
         ))}
+
+        {selectedTags.length > 0 && (
+          <button
+            type="button"
+            onClick={clearFilters}
+            className="ml-4 text-[10px] font-mono text-primary hover:underline uppercase tracking-widest whitespace-nowrap"
+          >
+            [ Clear All ]
+          </button>
+        )}
       </div>
 
       {/* Projects Grid */}
@@ -151,6 +172,13 @@ export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
             No projects found for the selected stack
           </p>
+          <button
+            type="button"
+            onClick={clearFilters}
+            className="mt-4 px-4 py-2 border border-primary/20 bg-primary/5 text-primary text-[10px] font-mono uppercase tracking-[0.2em] hover:bg-primary/10 transition-colors"
+          >
+            Reset All Filters
+          </button>
         </div>
       )}
     </div>

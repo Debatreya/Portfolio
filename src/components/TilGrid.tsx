@@ -20,15 +20,25 @@ interface TilGridProps {
 
 export function TilGrid({ posts }: TilGridProps) {
   const [activeCategory, setActiveCategory] = useState<string>("All Logs");
-  const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   // Filter posts logic
   const filteredPosts = posts.filter((post) => {
     const categoryMatch =
       activeCategory === "All Logs" || post.category === activeCategory;
-    const tagMatch = !activeTag || post.tags.includes(activeTag);
+    const tagMatch =
+      selectedTags.length === 0 ||
+      selectedTags.some((tag) => post.tags.includes(tag));
     return categoryMatch && tagMatch;
   });
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
+    );
+  };
+
+  const clearTags = () => setSelectedTags([]);
 
   // Dynamically calculate categories from CURRENTLY filtered posts?
   // No, better to keep them static from the full list for indexing.
@@ -67,7 +77,10 @@ export function TilGrid({ posts }: TilGridProps) {
                 key={cat.name}
                 onClick={() => {
                   setActiveCategory(cat.name);
-                  setActiveTag(null); // Clear tag when switching category
+                  // Optional: clear tags when switching category? 
+                  // Usually better to keep them for cross-category search.
+                  // But user indicated "All Projects" mutually exclusive.
+                  // Here categories are a bit different. I'll keep them as is unless asked.
                 }}
                 className={cn(
                   "flex items-center justify-between px-4 py-2 text-sm rounded-md cursor-pointer transition-all border-none outline-none w-full",
@@ -101,14 +114,14 @@ export function TilGrid({ posts }: TilGridProps) {
               <button
                 type="button"
                 key={tag}
-                onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+                onClick={() => toggleTag(tag)}
                 className="border-none p-0 bg-transparent outline-none"
               >
                 <Badge
-                  variant={activeTag === tag ? "default" : "outline"}
+                  variant={selectedTags.includes(tag) ? "default" : "outline"}
                   className={cn(
                     "text-[10px] font-mono border-border cursor-pointer rounded-sm px-2 py-1 uppercase transition-all",
-                    activeTag === tag
+                    selectedTags.includes(tag)
                       ? "bg-primary text-primary-foreground border-primary"
                       : "bg-transparent text-muted-foreground hover:border-primary/50 hover:text-primary",
                   )}
@@ -117,10 +130,10 @@ export function TilGrid({ posts }: TilGridProps) {
                 </Badge>
               </button>
             ))}
-            {activeTag && (
+            {selectedTags.length > 0 && (
               <button
                 type="button"
-                onClick={() => setActiveTag(null)}
+                onClick={clearTags}
                 className="text-[9px] font-mono text-primary hover:underline uppercase tracking-widest mt-2"
               >
                 [ CLEAR_FILTER ]
@@ -149,14 +162,14 @@ export function TilGrid({ posts }: TilGridProps) {
                 [ NO_MATCHING_RECORDS_FOUND ]
               </p>
               <p className="text-[10px] text-muted-foreground/50 max-w-xs uppercase leading-relaxed font-mono">
-                The current filter configuration [CAT: {activeCategory}] [TAG:{" "}
-                {activeTag || "NONE"}] yielded zero hits.
+                The current filter configuration [CAT: {activeCategory}] [TAGS:{" "}
+                {selectedTags.length > 0 ? selectedTags.join(", ") : "NONE"}] yielded zero hits.
               </p>
               <button
                 type="button"
                 onClick={() => {
                   setActiveCategory("All Logs");
-                  setActiveTag(null);
+                  clearTags();
                 }}
                 className="mt-4 px-4 py-2 border border-primary/20 bg-primary/5 text-primary text-[10px] font-mono uppercase tracking-[0.2em] hover:bg-primary/10 transition-colors"
               >
