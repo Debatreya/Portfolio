@@ -4,6 +4,13 @@ import { format } from "date-fns";
 import Link from "next/link";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
 interface Post {
@@ -61,6 +68,17 @@ export function TilGrid({ posts }: TilGridProps) {
   const uniqueTags = Array.from(
     new Set(posts.flatMap((post) => post.tags)),
   ).sort();
+
+  const maxVisibleTags = 8;
+  const selectedVisibleTags = uniqueTags.filter((tag) =>
+    selectedTags.includes(tag),
+  );
+  const remainingTags = uniqueTags.filter((tag) => !selectedTags.includes(tag));
+  const visibleTags = [...selectedVisibleTags, ...remainingTags].slice(
+    0,
+    maxVisibleTags,
+  );
+  const showSeeMoreTags = uniqueTags.length > maxVisibleTags;
 
   return (
     <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row gap-0">
@@ -154,6 +172,94 @@ export function TilGrid({ posts }: TilGridProps) {
             SYNCHRONIZED_KNOWLEDGE_BASE_V1.0
           </p>
         </header>
+
+        {/* Mobile Filter Section - Marks area from user request */}
+        <div className="md:hidden sticky top-0 z-30 bg-background/95 backdrop-blur-md -mx-6 px-6 py-4 border-b border-border flex flex-col gap-4">
+          {/* Mobile Categories - Horizontal Scroll */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+            {categories.map((cat) => (
+              <button
+                type="button"
+                key={cat.name}
+                onClick={() => setActiveCategory(cat.name)}
+                className={cn(
+                  "whitespace-nowrap px-3 py-1 text-[10px] font-mono uppercase tracking-widest rounded-full border transition-all shrink-0",
+                  activeCategory === cat.name
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "border-border text-muted-foreground hover:bg-muted",
+                )}
+              >
+                {cat.name} ({cat.count})
+              </button>
+            ))}
+          </div>
+
+          {/* Mobile Tags - Wrapping with See More */}
+          <div className="flex flex-wrap items-center gap-2">
+            {visibleTags.map((tag) => (
+              <Badge
+                key={tag}
+                variant={selectedTags.includes(tag) ? "default" : "outline"}
+                className={cn(
+                  "text-[9px] font-mono border-border cursor-pointer rounded-sm px-2 py-0.5 uppercase transition-all",
+                  selectedTags.includes(tag)
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-transparent text-muted-foreground hover:border-primary/50 hover:text-primary",
+                )}
+                onClick={() => toggleTag(tag)}
+              >
+                #{tag}
+              </Badge>
+            ))}
+
+            {showSeeMoreTags && (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button
+                    type="button"
+                    className="text-[9px] font-mono text-primary hover:underline uppercase tracking-widest"
+                  >
+                    + SEE_ALL
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle className="font-mono uppercase tracking-[0.2em] text-sm">
+                      FILTER_MANIFEST_FULL
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4">
+                    {uniqueTags.map((tag) => (
+                      <Badge
+                        key={tag}
+                        variant={selectedTags.includes(tag) ? "default" : "outline"}
+                        className={cn(
+                          "whitespace-nowrap cursor-pointer transition-all px-3 py-1.5 rounded-md font-mono text-[9px] uppercase tracking-widest justify-center",
+                          selectedTags.includes(tag)
+                            ? "bg-primary text-primary-foreground"
+                            : "text-muted-foreground hover:bg-muted",
+                        )}
+                        onClick={() => toggleTag(tag)}
+                      >
+                        #{tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </DialogContent>
+              </Dialog>
+            )}
+
+            {selectedTags.length > 0 && (
+              <button
+                type="button"
+                onClick={clearTags}
+                className="ml-auto text-[9px] font-mono text-primary hover:underline uppercase tracking-widest"
+              >
+                [ CLEAR ]
+              </button>
+            )}
+          </div>
+        </div>
 
         <div className="flex flex-col gap-8 pt-8">
           {filteredPosts.length === 0 ? (
