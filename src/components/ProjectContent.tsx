@@ -1,5 +1,13 @@
 import { formatDistanceToNow } from "date-fns";
-import { ArrowUpRight, Clock, Code2, FileCode, Info, MoreHorizontal, Star } from "lucide-react";
+import {
+  ArrowUpRight,
+  Clock,
+  Code2,
+  FileCode,
+  Info,
+  MoreHorizontal,
+  Star,
+} from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeHighlight from "rehype-highlight";
 import rehypeKatex from "rehype-katex";
@@ -144,10 +152,11 @@ export function ProjectContent({ project, isModal }: ProjectContentProps) {
     img: (props: React.ComponentPropsWithoutRef<"img">) => {
       const { src: originalSrc, alt, ...rest } = props;
       const srcStr = typeof originalSrc === "string" ? originalSrc : "";
-      const isRelative = srcStr && !srcStr.startsWith("http") && !srcStr.startsWith("/");
+      const isRelative =
+        srcStr && !srcStr.startsWith("http") && !srcStr.startsWith("/");
       const githubBase = `https://raw.githubusercontent.com/Debatreya/Debatreya-TIL-garden/master/`;
       const finalSrc = isRelative ? `${githubBase}${srcStr}` : srcStr;
-      
+
       return (
         <div className="my-8 rounded-lg overflow-hidden border border-white/10 bg-white/5">
           <img

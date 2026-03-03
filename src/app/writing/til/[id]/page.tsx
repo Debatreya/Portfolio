@@ -157,8 +157,7 @@ export default async function TilPost({
     img: (props: React.ComponentPropsWithoutRef<"img">) => {
       const { src: originalSrc, alt, ...rest } = props;
       const srcStr = typeof originalSrc === "string" ? originalSrc : "";
-      const isRelative =
-        srcStr && !srcStr.startsWith("http");
+      const isRelative = srcStr && !srcStr.startsWith("http");
       const githubBase =
         "https://raw.githubusercontent.com/Debatreya/Debatreya-TIL-garden/master/";
       const finalSrc = isRelative ? `${githubBase}${srcStr}` : srcStr;

@@ -14,9 +14,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import type { ProjectManifest } from "@/types/portfolio";
 
 interface ProjectGridProps {
-  projects: any[];
+  projects: ProjectManifest[];
   allTags: string[];
 }
 

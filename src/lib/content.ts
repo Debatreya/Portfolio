@@ -28,7 +28,12 @@ export function getPostsByType(type: "til" | "blog" | "experience"): Post[] {
   const fileNames = fs.readdirSync(directory);
 
   const posts = fileNames
-    .filter((fileName) => fileName.endsWith(".md") || fileName.endsWith(".mdx") || fileName.endsWith(".qmd"))
+    .filter(
+      (fileName) =>
+        fileName.endsWith(".md") ||
+        fileName.endsWith(".mdx") ||
+        fileName.endsWith(".qmd"),
+    )
     .map((fileName) => {
       const id = fileName.replace(/\.(mdx?|qmd)$/, "");
       const fullPath = path.join(directory, fileName);

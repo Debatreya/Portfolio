@@ -127,6 +127,7 @@ export async function getGithubEvents(page = 1, per_page = 30) {
         let link = `https://github.com/${event.repo.name}`;
         let type: "PR" | "COMMIT" | "ISSUE" | "REPO" | "MERGE" | "OTHER" =
           "OTHER";
+        // biome-ignore lint/suspicious/noExplicitAny: complex Octokit payload
         const payload = event.payload as any;
         const repoShort = event.repo.name.split("/")[1] || event.repo.name;
 

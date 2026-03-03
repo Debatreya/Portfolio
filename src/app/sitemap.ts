@@ -1,5 +1,5 @@
-import { headers } from "next/headers";
 import type { MetadataRoute } from "next";
+import { headers } from "next/headers";
 import { getRemoteTILs } from "@/lib/content";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
