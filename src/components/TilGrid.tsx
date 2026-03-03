@@ -63,9 +63,9 @@ export function TilGrid({ posts }: TilGridProps) {
   ).sort();
 
   return (
-    <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row gap-0 min-h-[calc(100vh-100px)]">
+    <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row gap-0">
       {/* Sidebar - CATEGORIES & FILTER_MANIFEST */}
-      <aside className="w-full md:w-64 border-r border-border pr-6 hidden md:flex flex-col gap-10 py-12">
+      <aside className="w-full md:w-64 border-r border-border pr-6 hidden md:flex flex-col gap-10 py-12 sticky top-0 h-fit self-start">
         <div className="flex flex-col gap-4">
           <h2 className="text-[10px] font-bold font-mono text-muted-foreground uppercase tracking-widest pl-4">
             CATEGORIES
@@ -143,7 +143,7 @@ export function TilGrid({ posts }: TilGridProps) {
         </div>
       </aside>
 
-      {/* Main Content */}
+      {/* Main Content Area - already inside scrolling main layout */}
       <div className="flex-1 py-12 px-6 md:px-12 max-w-5xl border-l border-border/50">
         <header className="flex flex-col gap-4 border-b border-border pb-12 pt-0">
           <h1 className="text-4xl md:text-5xl font-black tracking-tighter font-sans text-foreground">

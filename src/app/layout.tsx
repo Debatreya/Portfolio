@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden`}
       >
         <ThemeProvider
           attribute="class"
@@ -38,9 +38,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <CommandPalette>
-            <div className="min-h-screen bg-background text-foreground flex flex-col">
+            <div className="h-screen bg-background text-foreground flex flex-col overflow-hidden">
               <Navbar />
-              <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-y-auto scroll-smooth">
                 {children}
               </main>
 

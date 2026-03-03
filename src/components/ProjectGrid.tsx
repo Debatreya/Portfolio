@@ -42,7 +42,7 @@ export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
   return (
     <div className="flex flex-col gap-10">
       {/* Tags Filter Strip */}
-      <div className="flex items-center gap-3 overflow-x-auto pb-4 scrollbar-hide border-b border-border">
+      <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-md pt-2 pb-6 border-b border-border flex items-center gap-3 overflow-x-auto scrollbar-hide">
         <Badge
           variant={selectedTags.length === 0 ? "default" : "outline"}
           className={cn(
