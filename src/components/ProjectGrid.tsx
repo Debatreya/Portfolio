@@ -42,7 +42,10 @@ export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
   const maxVisible = 12;
   const selectedVisible = allTags.filter((tag) => selectedTags.includes(tag));
   const remainingTags = allTags.filter((tag) => !selectedTags.includes(tag));
-  const visibleTags = [...selectedVisible, ...remainingTags].slice(0, maxVisible);
+  const visibleTags = [...selectedVisible, ...remainingTags].slice(
+    0,
+    maxVisible,
+  );
   const showSeeMore = allTags.length > maxVisible;
 
   const filteredProjects =
@@ -70,7 +73,7 @@ export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
             All Projects
           </Badge>
           <div className="w-px h-4 bg-border mx-1 shrink-0" />
-          
+
           {visibleTags.map((tag) => (
             <Badge
               key={tag}
@@ -107,7 +110,9 @@ export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
                   {allTags.map((tag) => (
                     <Badge
                       key={tag}
-                      variant={selectedTags.includes(tag) ? "default" : "outline"}
+                      variant={
+                        selectedTags.includes(tag) ? "default" : "outline"
+                      }
                       className={cn(
                         "whitespace-nowrap cursor-pointer transition-all px-3 py-1.5 rounded-md font-mono text-[9px] uppercase tracking-widest justify-center",
                         selectedTags.includes(tag)

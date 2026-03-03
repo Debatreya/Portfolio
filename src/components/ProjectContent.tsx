@@ -281,6 +281,7 @@ export function ProjectContent({ project, isModal }: ProjectContentProps) {
             components={mdxComponents}
             options={{
               mdxOptions: {
+                format: "md",
                 remarkPlugins: [remarkMath, remarkGfm],
                 rehypePlugins: [rehypeKatex, rehypeHighlight],
               },

@@ -1,9 +1,9 @@
 "use client";
 
+import { useKBar } from "kbar";
 import { Command, Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useKBar } from "kbar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 
@@ -51,20 +51,22 @@ export function Navbar() {
 
       {/* Command Palette Hint & Mobile Menu */}
       <div className="flex items-center gap-2 md:gap-4">
-        <div
+        <button
+          type="button"
           onClick={() => query.toggle()}
           className="flex md:hidden items-center justify-center w-9 h-9 text-muted-foreground bg-muted/50 rounded-md border border-white/10 cursor-pointer hover:bg-muted/80 transition-colors"
           aria-label="Toggle Menu"
         >
           <Menu className="w-5 h-5" />
-        </div>
-        <div
+        </button>
+        <button
+          type="button"
           onClick={() => query.toggle()}
           className="hidden md:flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded-md border border-white/10 cursor-pointer hover:bg-muted/80 transition-colors"
         >
           <Command className="w-3 h-3" />
           <span>K for Menu</span>
-        </div>
+        </button>
         <ThemeToggle />
       </div>
     </nav>

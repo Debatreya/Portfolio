@@ -150,6 +150,14 @@ export async function getRemoteTILByPath(
       const contentRaw = Buffer.from(fileData.content, "base64").toString();
       const { data, content } = matter(contentRaw);
 
+      let sanitizedContent = content;
+      if (sanitizedContent.trim().startsWith("---")) {
+        const parts = sanitizedContent.split("---");
+        if (parts.length >= 3) {
+          sanitizedContent = parts.slice(2).join("---").trim();
+        }
+      }
+
       const id =
         data.id ||
         filePath
@@ -165,9 +173,9 @@ export async function getRemoteTILByPath(
           ? new Date(data.date).toISOString()
           : new Date().toISOString(),
         category: data.category || "TIL",
-        tags: (data.tags || []).map((t: string) => t.replace(/^#/, "")), // strip leading #
-        excerpt: data.excerpt || `${content.slice(0, 150)}...`,
-        content,
+        tags: (data.tags || []).map((t: string) => t.replace(/^#/, "")),
+        excerpt: data.excerpt || `${sanitizedContent.slice(0, 150)}...`,
+        content: sanitizedContent,
         type: "til",
         read_time: data.read_time || "5 min",
         related_projects: data.related_projects || [],
@@ -175,6 +183,7 @@ export async function getRemoteTILByPath(
         system_manifest: data.system_manifest || "",
         code_filename: data["code-filename"] || "",
         contributor_avatars: data.contributor_avatars || [],
+        external_links: data.external_links || [],
       };
     }
     return null;

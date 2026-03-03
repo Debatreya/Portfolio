@@ -8,6 +8,8 @@ import {
   Folder,
   Info,
   Layers,
+  Linkedin,
+  Link as LinkIcon,
   MoreHorizontal,
   Users,
 } from "lucide-react";
@@ -194,22 +196,32 @@ export default async function TilPost({
   // Resolve avatar paths
   const gardenRawUrl =
     "https://raw.githubusercontent.com/Debatreya/Debatreya-TIL-garden/master";
-  const avatarUrls =
-    post.contributor_avatars?.map((path) =>
-      path.startsWith("http")
-        ? path
-        : `${gardenRawUrl}${path.startsWith("/") ? "" : "/"}${path}`,
-    ) || [];
+  const processedContributors =
+    post.contributor_avatars?.map((c) => {
+      // Handle both old string format and new object format
+      const name = typeof c === "string" ? "Contributor" : c.name;
+      const avatar = typeof c === "string" ? c : c.avatar;
+      const url = avatar.startsWith("http")
+        ? avatar
+        : `${gardenRawUrl}${avatar.startsWith("/") ? "" : "/"}${avatar}`;
+
+      return { name, url };
+    }) || [];
+
+  // Sanitize MDX content to prevent "acorn" parsing errors for literal braces
+  const sanitizedContent = post.content
+    .replace(/{/g, "&#123;")
+    .replace(/}/g, "&#125;");
 
   return (
-    <div className="flex flex-col lg:flex-row gap-12 py-12">
+    <div className="flex flex-col lg:flex-row gap-12 pt-0 pb-12">
       {/* Left Column: Post Content */}
       <article className="flex-1 min-w-0">
         <div className="mb-12">
           {/* Back button with themed style */}
           <Link
             href="/writing/til"
-            className="group inline-flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors mb-12"
+            className="group inline-flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors mb-6"
           >
             <ArrowLeft className="w-3 h-3 transition-transform group-hover:-translate-x-1" />{" "}
             [ BACK_TO_LIBRARY ]
@@ -244,10 +256,11 @@ export default async function TilPost({
 
         <div className="prose prose-invert max-w-none prose-p:leading-relaxed prose-p:text-lg prose-headings:tracking-tighter prose-pre:bg-[#0a0a0a] prose-pre:border prose-pre:border-white/5">
           <MDXRemote
-            source={post.content}
+            source={sanitizedContent}
             components={mdxComponents}
             options={{
               mdxOptions: {
+                format: "md",
                 remarkPlugins: [remarkMath, remarkGfm],
                 rehypePlugins: [rehypeKatex, rehypeHighlight],
               },
@@ -272,13 +285,13 @@ export default async function TilPost({
 
       {/* Right Column: Knowledge Graph Sidebar */}
       <aside className="w-full lg:w-[350px] shrink-0">
-        <div className="sticky top-24 space-y-12">
+        <div className="sticky top-6 space-y-8">
           {/* Header */}
           <div className="flex items-center gap-3 mb-8">
             <div className="w-5 h-5 bg-primary/20 rounded flex items-center justify-center">
               <Layers className="w-3 h-3 text-primary" />
             </div>
-            <h2 className="text-xs font-mono font-black uppercase tracking-[0.25em] text-foreground">
+            <h2 className="text-sm font-mono font-black uppercase tracking-[0.25em] text-foreground">
               Knowledge Graph
             </h2>
           </div>
@@ -347,21 +360,53 @@ export default async function TilPost({
 
           <div className="h-px bg-white/5 w-full" />
 
+          {/* External Links */}
+          {post.external_links && post.external_links.length > 0 && (
+            <div className="space-y-4">
+              <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-[0.2em]">
+                EXTERNAL_LINKS
+              </div>
+              <div className="flex items-center gap-3">
+                {post.external_links.map((link) => (
+                  <a
+                    key={link.url}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary/10 hover:border-primary/30 transition-all group"
+                    title={link.name}
+                  >
+                    {link.name.toLowerCase() === "linkedin" ? (
+                      <Linkedin
+                        className="w-4 h-4 text-[#0A66C2]"
+                        fill="currentColor"
+                        strokeWidth={1}
+                      />
+                    ) : (
+                      <LinkIcon className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+                    )}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Contributors */}
           <div className="space-y-6">
             <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-[0.2em]">
               NODE_CONTRIBUTORS
             </div>
-            <div className="flex items-center -space-x-2">
-              {avatarUrls.length > 0 ? (
-                avatarUrls.map((url) => (
+            <div className="flex items-center gap-3">
+              {processedContributors.length > 0 ? (
+                processedContributors.map((c) => (
                   <div
-                    key={url}
-                    className="w-8 h-8 rounded-full border-2 border-[#121415] bg-muted overflow-hidden flex items-center justify-center"
+                    key={c.url}
+                    className="w-8 h-8 rounded-full border-2 border-[#121415] bg-muted overflow-hidden flex items-center justify-center relative group"
+                    title={c.name}
                   >
                     <img
-                      src={url}
-                      alt="Avatar"
+                      src={c.url}
+                      alt={c.name}
                       className="w-full h-full object-cover"
                     />
                   </div>

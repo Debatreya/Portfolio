@@ -86,9 +86,10 @@ export interface ProjectManifest {
   priority: number; // Higher number = shown first
   relatedTILIds?: string[];
   hasDeepDive?: boolean;
-  contributor_avatars?: string[];
+  contributor_avatars?: { name: string; avatar: string }[];
   code_filename?: string;
   system_manifest?: string;
+  external_links?: { name: string; url: string }[];
 }
 
 /**
@@ -110,7 +111,8 @@ export interface Post {
   related_tils?: string[];
   system_manifest?: string; // For System Note
   code_filename?: string; // For code block header
-  contributor_avatars?: string[];
+  contributor_avatars?: { name: string; avatar: string }[];
+  external_links?: { name: string; url: string }[];
 }
 
 /**

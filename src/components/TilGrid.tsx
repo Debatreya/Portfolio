@@ -95,7 +95,7 @@ export function TilGrid({ posts }: TilGridProps) {
                 key={cat.name}
                 onClick={() => {
                   setActiveCategory(cat.name);
-                  // Optional: clear tags when switching category? 
+                  // Optional: clear tags when switching category?
                   // Usually better to keep them for cross-category search.
                   // But user indicated "All Projects" mutually exclusive.
                   // Here categories are a bit different. I'll keep them as is unless asked.
@@ -232,7 +232,9 @@ export function TilGrid({ posts }: TilGridProps) {
                     {uniqueTags.map((tag) => (
                       <Badge
                         key={tag}
-                        variant={selectedTags.includes(tag) ? "default" : "outline"}
+                        variant={
+                          selectedTags.includes(tag) ? "default" : "outline"
+                        }
                         className={cn(
                           "whitespace-nowrap cursor-pointer transition-all px-3 py-1.5 rounded-md font-mono text-[9px] uppercase tracking-widest justify-center",
                           selectedTags.includes(tag)
@@ -269,7 +271,8 @@ export function TilGrid({ posts }: TilGridProps) {
               </p>
               <p className="text-[10px] text-muted-foreground/50 max-w-xs uppercase leading-relaxed font-mono">
                 The current filter configuration [CAT: {activeCategory}] [TAGS:{" "}
-                {selectedTags.length > 0 ? selectedTags.join(", ") : "NONE"}] yielded zero hits.
+                {selectedTags.length > 0 ? selectedTags.join(", ") : "NONE"}]
+                yielded zero hits.
               </p>
               <button
                 type="button"
