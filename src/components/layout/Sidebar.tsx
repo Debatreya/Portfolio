@@ -1,5 +1,6 @@
 import { Github, Linkedin, Mail } from "lucide-react";
 import Link from "next/link";
+import { ProfileGallery } from "@/components/ProfileGallery";
 import { Badge } from "@/components/ui/badge";
 import resumeData from "@/data/resume.json";
 
@@ -10,15 +11,13 @@ export function Sidebar() {
     <aside className="flex flex-col gap-3 p-3 rounded-xl border bg-card text-card-foreground shadow">
       {/* Profile Section */}
       <div className="flex flex-col items-center text-center gap-4">
-        <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-muted">
-          {/* Fallback image if avatarUrl is missing/broken */}
-          <div className="w-full h-full bg-muted flex items-center justify-center text-muted-foreground text-3xl font-bold">
-            {profile.name
-              .split(" ")
-              .map((n) => n[0])
-              .join("")}
-          </div>
-        </div>
+        <ProfileGallery
+          folder="/me"
+          fallbackInitials={profile.name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")}
+        />
 
         <div className="space-y-1">
           <h1 className="text-xl font-bold tracking-tight">{profile.name}</h1>
