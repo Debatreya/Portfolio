@@ -167,7 +167,11 @@ export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
                 </div>
               </div>
               <CardTitle className="tracking-tight text-xl mt-2 group-hover:text-primary transition-colors flex items-center justify-between gap-3">
-                <Link href={`/projects/${project.id}`} scroll={false} className="min-w-0">
+                <Link
+                  href={`/projects/${project.id}`}
+                  scroll={false}
+                  className="min-w-0"
+                >
                   <span className="block truncate">{project.name}</span>
                 </Link>
                 {project.hasDeepDive && (

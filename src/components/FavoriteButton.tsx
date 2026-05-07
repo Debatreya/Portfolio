@@ -2,14 +2,14 @@
 
 import { Heart } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
-import { cn } from "@/lib/utils";
 import {
   buildFavoriteEvent,
+  type FavoriteItemType,
   isFavorite,
   sendFavoriteEvent,
   setFavorite,
-  type FavoriteItemType,
 } from "@/lib/favorites";
+import { cn } from "@/lib/utils";
 
 interface FavoriteButtonProps {
   itemId: string;

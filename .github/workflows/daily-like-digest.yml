@@ -1,0 +1,133 @@
+name: Daily Like Digest
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build digest from Apps Script
+        id: digest
+        env:
+          APPS_SCRIPT_WEB_APP_URL: ${{ secrets.APPS_SCRIPT_WEB_APP_URL }}
+        run: |
+          python <<'PY'
+          import json
+          import os
+          import sys
+          import urllib.parse
+          import urllib.request
+          from collections import Counter
+          from datetime import datetime, timedelta, timezone
+
+          endpoint = os.environ.get("APPS_SCRIPT_WEB_APP_URL", "").strip()
+          if not endpoint:
+              raise SystemExit("APPS_SCRIPT_WEB_APP_URL secret is required.")
+
+          separator = "&" if "?" in endpoint else "?"
+          request_url = f"{endpoint}{separator}{urllib.parse.urlencode({'mode': 'recent', 'hours': '24'})}"
+
+          with urllib.request.urlopen(request_url, timeout=30) as response:
+              payload = json.load(response)
+
+          rows = payload.get("rows") or payload.get("data") or []
+          cutoff = datetime.now(timezone.utc) - timedelta(hours=24)
+          recent_rows = []
+
+          for row in rows:
+              liked_at = row.get("likedAt") or row.get("timestamp") or row.get("time")
+              if not liked_at:
+                  continue
+
+              try:
+                  parsed = datetime.fromisoformat(str(liked_at).replace("Z", "+00:00"))
+              except ValueError:
+                  continue
+
+              if parsed >= cutoff:
+                  recent_rows.append(row)
+
+          item_counter = Counter()
+          for row in recent_rows:
+              item_type = row.get("itemType", "unknown")
+              item_id = row.get("itemId", "unknown")
+              title = row.get("title") or item_id
+              item_counter[(item_type, item_id, title)] += 1
+
+          unique_visitors = len({row.get("visitorId") for row in recent_rows if row.get("visitorId")})
+          unique_pages = len({row.get("pageUrl") for row in recent_rows if row.get("pageUrl")})
+
+          lines = []
+          lines.append("## Daily Like Digest")
+          lines.append("")
+          lines.append(f"- Window: last 24 hours")
+          lines.append(f"- Total likes: {len(recent_rows)}")
+          lines.append(f"- Unique visitors: {unique_visitors}")
+          lines.append(f"- Unique pages: {unique_pages}")
+          lines.append("")
+
+          if item_counter:
+              lines.append("### Top liked items")
+              for (item_type, item_id, title), count in item_counter.most_common(5):
+                  lines.append(f"- {count} x [{title}] ({item_type} / {item_id})")
+          else:
+              lines.append("No new likes were captured in the last 24 hours.")
+
+          lines.append("")
+          lines.append("### Recent rows")
+          if recent_rows:
+              for row in recent_rows[-10:]:
+                  liked_at = row.get("likedAt") or row.get("timestamp") or "unknown-time"
+                  title = row.get("title") or row.get("itemId") or "unknown-item"
+                  item_type = row.get("itemType") or "unknown-type"
+                  page_url = row.get("pageUrl") or "unknown-page"
+                  lines.append(f"- {liked_at} | {item_type} | {title} | {page_url}")
+          else:
+              lines.append("- No rows to display.")
+
+          body = "\n".join(lines)
+          output_path = os.environ["GITHUB_OUTPUT"]
+          with open(output_path, "a", encoding="utf-8") as output_file:
+              output_file.write("body<<EOF\n")
+              output_file.write(body)
+              output_file.write("\nEOF\n")
+          print(body)
+          PY
+
+      - name: Write job summary
+        run: |
+          cat <<'EOF' >> "$GITHUB_STEP_SUMMARY"
+          ${{ steps.digest.outputs.body }}
+          EOF
+
+      - name: Comment on digest issue
+        if: ${{ secrets.DIGEST_ISSUE_NUMBER != '' }}
+        uses: actions/github-script@v7
+        env:
+          DIGEST_BODY: ${{ steps.digest.outputs.body }}
+          DIGEST_ISSUE_NUMBER: ${{ secrets.DIGEST_ISSUE_NUMBER }}
+        with:
+          script: |
+            const issueNumber = Number.parseInt(process.env.DIGEST_ISSUE_NUMBER, 10);
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body: process.env.DIGEST_BODY,
+            });

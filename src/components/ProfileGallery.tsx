@@ -3,13 +3,13 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { getImagesFromFolder } from "@/lib/actions";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { getImagesFromFolder } from "@/lib/actions";
 
 export function ProfileGallery({
   folder,

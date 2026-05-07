@@ -99,7 +99,8 @@ export function getColorSchemePreference() {
   if (!isBrowser()) return "system";
 
   if (window.matchMedia("(prefers-color-scheme: dark)").matches) return "dark";
-  if (window.matchMedia("(prefers-color-scheme: light)").matches) return "light";
+  if (window.matchMedia("(prefers-color-scheme: light)").matches)
+    return "light";
   return "system";
 }
 
@@ -124,7 +125,10 @@ export function buildFavoriteEvent(
     };
   }
 
-  const url = new URL(target.pageUrl || window.location.href, window.location.origin);
+  const url = new URL(
+    target.pageUrl || window.location.href,
+    window.location.origin,
+  );
   const params = url.searchParams;
 
   return {
@@ -160,9 +164,7 @@ export async function sendFavoriteEvent(payload: FavoriteEventPayload) {
   try {
     const response = await fetch(endpoint, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      mode: "no-cors",
       body: JSON.stringify(payload),
     });
 

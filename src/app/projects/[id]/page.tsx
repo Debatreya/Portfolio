@@ -4,6 +4,11 @@ import { notFound } from "next/navigation";
 import { ProjectContent } from "@/components/ProjectContent";
 import { getProjectDeepDive, getRemoteTILs } from "@/lib/content";
 import { getProjects } from "@/lib/github";
+import type { ProjectManifest } from "@/types/portfolio";
+
+type ContributorAvatar = NonNullable<
+  ProjectManifest["contributor_avatars"]
+>[number];
 
 export const revalidate = 43200; // Refresh data every 12 hours
 
@@ -154,7 +159,7 @@ export default async function ProjectDeepDive({
               <div className="flex items-center -space-x-1">
                 {project.contributor_avatars &&
                 project.contributor_avatars.length > 0 ? (
-                  project.contributor_avatars.map((c: any) => {
+                  project.contributor_avatars.map((c: ContributorAvatar) => {
                     const name = typeof c === "string" ? "Contributor" : c.name;
                     const avatar = typeof c === "string" ? c : c.avatar;
                     return (
