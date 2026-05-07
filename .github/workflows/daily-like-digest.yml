@@ -12,6 +12,9 @@ permissions:
 jobs:
   digest:
     runs-on: ubuntu-latest
+    env:
+      APPS_SCRIPT_WEB_APP_URL: ${{ secrets.APPS_SCRIPT_WEB_APP_URL }}
+      DIGEST_ISSUE_NUMBER: ${{ secrets.DIGEST_ISSUE_NUMBER }}
 
     steps:
       - name: Checkout
@@ -24,8 +27,6 @@ jobs:
 
       - name: Build digest from Apps Script
         id: digest
-        env:
-          APPS_SCRIPT_WEB_APP_URL: ${{ secrets.APPS_SCRIPT_WEB_APP_URL }}
         run: |
           python <<'PY'
           import json
@@ -117,11 +118,10 @@ jobs:
           EOF
 
       - name: Comment on digest issue
-        if: ${{ secrets.DIGEST_ISSUE_NUMBER != '' }}
+        if: ${{ env.DIGEST_ISSUE_NUMBER != '' }}
         uses: actions/github-script@v7
         env:
           DIGEST_BODY: ${{ steps.digest.outputs.body }}
-          DIGEST_ISSUE_NUMBER: ${{ secrets.DIGEST_ISSUE_NUMBER }}
         with:
           script: |
             const issueNumber = Number.parseInt(process.env.DIGEST_ISSUE_NUMBER, 10);
