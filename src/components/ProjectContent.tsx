@@ -13,6 +13,7 @@ import rehypeHighlight from "rehype-highlight";
 import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
+import { FavoriteButton } from "@/components/FavoriteButton";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import "katex/dist/katex.min.css";
@@ -202,6 +203,18 @@ export function ProjectContent({ project, isModal }: ProjectContentProps) {
               );
             })}
           </div>
+        </div>
+
+        <div className="mb-8 flex flex-wrap items-center gap-3">
+          <FavoriteButton
+            itemId={project.id || project.name || "project"}
+            itemType="project"
+            title={project.name}
+            pageUrl={project.id ? `/projects/${project.id}` : undefined}
+          />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
+            Saves this project in your browser and can report the event later.
+          </span>
         </div>
 
         <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-4 leading-[0.95] text-foreground">

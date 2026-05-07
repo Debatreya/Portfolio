@@ -3,6 +3,7 @@
 import { format } from "date-fns";
 import Link from "next/link";
 import { useState } from "react";
+import { FavoriteButton } from "@/components/FavoriteButton";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -287,9 +288,8 @@ export function TilGrid({ posts }: TilGridProps) {
             </div>
           ) : (
             filteredPosts.map((post) => (
-              <Link
+              <div
                 key={post.id}
-                href={`/writing/til/${post.id}`}
                 className="group grid grid-cols-1 md:grid-cols-[120px_1fr_auto] items-center gap-6 py-6 border-b border-border hover:bg-muted/30 transition-all -mx-4 px-4 rounded-lg relative overflow-hidden"
               >
                 <div className="absolute left-0 top-0 w-1 h-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -299,9 +299,12 @@ export function TilGrid({ posts }: TilGridProps) {
                 </time>
 
                 <div className="order-1 md:order-2 flex flex-col gap-1">
-                  <h3 className="text-lg font-bold text-foreground transition-colors leading-tight">
+                  <Link
+                    href={`/writing/til/${post.id}`}
+                    className="text-lg font-bold text-foreground transition-colors leading-tight hover:text-primary"
+                  >
                     {post.title}
-                  </h3>
+                  </Link>
                   <div className="flex gap-2">
                     {post.tags.slice(0, 3).map((t) => (
                       <span
@@ -314,15 +317,21 @@ export function TilGrid({ posts }: TilGridProps) {
                   </div>
                 </div>
 
-                <div className="order-3 flex justify-end">
+                <div className="order-3 flex items-center justify-end gap-3">
                   <Badge
                     variant="outline"
                     className="text-[10px] font-mono rounded-none px-3 py-1 border-border bg-muted/50 text-muted-foreground group-hover:border-primary/50 group-hover:text-primary transition-all tracking-widest uppercase"
                   >
                     {post.category}
                   </Badge>
+                  <FavoriteButton
+                    itemId={post.id}
+                    itemType="til"
+                    title={post.title}
+                    pageUrl={`/writing/til/${post.id}`}
+                  />
                 </div>
-              </Link>
+              </div>
             ))
           )}
 

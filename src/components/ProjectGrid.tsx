@@ -4,6 +4,7 @@ import { formatDistanceToNow } from "date-fns";
 import { ArrowUpRight, Code2, Star } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { FavoriteButton } from "@/components/FavoriteButton";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -144,68 +145,68 @@ export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
       {/* Projects Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredProjects.map((project) => (
-          <Link
+          <Card
             key={project.id}
-            href={`/projects/${project.id}`}
-            scroll={false}
             className="flex flex-col group hover:-translate-y-1 transition-transform duration-300 border border-border bg-card/50 hover:bg-card rounded-xl overflow-hidden shadow-lg"
           >
-            <Card className="border-0 bg-transparent flex flex-col h-full rounded-none">
-              <CardHeader className="flex flex-col gap-2 pb-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-muted-foreground bg-muted/50 px-2 py-1 rounded-md">
-                    <Code2 className="w-4 h-4" />
-                    <span className="text-xs font-mono font-medium truncate max-w-[120px]">
-                      {project.techStack?.[0]}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {project.stats?.stars !== undefined && (
-                      <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-muted-foreground">
-                        <Star className="w-3.5 h-3.5 fill-muted-foreground/30" />
-                        {project.stats.stars}
-                      </div>
-                    )}
-                  </div>
+            <CardHeader className="flex flex-col gap-2 pb-4">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2 text-muted-foreground bg-muted/50 px-2 py-1 rounded-md">
+                  <Code2 className="w-4 h-4" />
+                  <span className="text-xs font-mono font-medium truncate max-w-[120px]">
+                    {project.techStack?.[0]}
+                  </span>
                 </div>
-                <CardTitle className="tracking-tight text-xl mt-2 group-hover:text-primary transition-colors flex items-center justify-between">
-                  {project.name}
-                  {project.hasDeepDive && (
-                    <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all -translate-y-1" />
+                <div className="flex items-center gap-2">
+                  {project.stats?.stars !== undefined && (
+                    <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-muted-foreground">
+                      <Star className="w-3.5 h-3.5 fill-muted-foreground/30" />
+                      {project.stats.stars}
+                    </div>
                   )}
-                </CardTitle>
-                <CardDescription className="font-medium text-foreground/80 line-clamp-1">
-                  {project.tagline}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex-1 pb-4">
-                <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
-                  {project.description}
-                </p>
+                </div>
+              </div>
+              <CardTitle className="tracking-tight text-xl mt-2 group-hover:text-primary transition-colors flex items-center justify-between gap-3">
+                <Link href={`/projects/${project.id}`} scroll={false} className="min-w-0">
+                  <span className="block truncate">{project.name}</span>
+                </Link>
+                {project.hasDeepDive && (
+                  <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all -translate-y-1 shrink-0" />
+                )}
+              </CardTitle>
+              <CardDescription className="font-medium text-foreground/80 line-clamp-1">
+                {project.tagline}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex-1 pb-4">
+              <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
+                {project.description}
+              </p>
 
-                <div className="flex flex-wrap gap-1.5 mt-4">
-                  {project.techStack?.slice(0, 4).map((tech: string) => (
-                    <Badge
-                      key={tech}
-                      variant="secondary"
-                      className="text-[10px] font-mono px-1.5 py-0 bg-muted/30 pointer-events-none"
-                    >
-                      {tech}
-                    </Badge>
-                  ))}
-                  {(project.techStack?.length || 0) > 4 && (
-                    <span className="text-[10px] text-muted-foreground font-mono">
-                      +{(project.techStack?.length || 0) - 4} MORE
-                    </span>
-                  )}
-                </div>
-              </CardContent>
-              <CardFooter className="pt-4 border-t border-border flex items-center justify-between text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
-                <div className="flex items-center gap-1.5">
-                  ID: {project.id.slice(0, 10)}
-                </div>
+              <div className="flex flex-wrap gap-1.5 mt-4">
+                {project.techStack?.slice(0, 4).map((tech: string) => (
+                  <Badge
+                    key={tech}
+                    variant="secondary"
+                    className="text-[10px] font-mono px-1.5 py-0 bg-muted/30 pointer-events-none"
+                  >
+                    {tech}
+                  </Badge>
+                ))}
+                {(project.techStack?.length || 0) > 4 && (
+                  <span className="text-[10px] text-muted-foreground font-mono">
+                    +{(project.techStack?.length || 0) - 4} MORE
+                  </span>
+                )}
+              </div>
+            </CardContent>
+            <CardFooter className="pt-4 border-t border-border flex items-center justify-between gap-3 text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="truncate">ID: {project.id.slice(0, 10)}</span>
+              </div>
+              <div className="flex items-center gap-3">
                 {project.stats?.lastCommit && (
-                  <div className="flex items-center gap-1.5">
+                  <div className="hidden sm:flex items-center gap-1.5 whitespace-nowrap">
                     <span className="relative flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -216,9 +217,15 @@ export function ProjectGrid({ projects, allTags }: ProjectGridProps) {
                     })}
                   </div>
                 )}
-              </CardFooter>
-            </Card>
-          </Link>
+                <FavoriteButton
+                  itemId={project.id}
+                  itemType="project"
+                  title={project.name}
+                  pageUrl={`/projects/${project.id}`}
+                />
+              </div>
+            </CardFooter>
+          </Card>
         ))}
       </div>
 
