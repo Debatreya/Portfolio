@@ -1,3 +1,4 @@
+import React from "react";
 import { format } from "date-fns";
 import {
   ArrowLeft,
@@ -15,8 +16,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { MDXRemote } from "next-mdx-remote/rsc";
-import type React from "react";
+import ReactMarkdown from "react-markdown";
+import type { Components } from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
@@ -95,22 +96,48 @@ export default async function TilPost({
         {...props}
       />
     ),
-    code: (props: React.ComponentPropsWithoutRef<"code">) => (
-      <code
-        className="bg-primary/10 text-primary px-1.5 py-0.5 rounded font-mono text-xs border border-primary/20"
-        {...props}
-      />
-    ),
-    pre: (props: React.ComponentPropsWithoutRef<"pre">) => {
+    code: ({ node, isBlock, ...props }: React.ComponentPropsWithoutRef<"code"> & { node?: any; isBlock?: boolean }) => {
+      if (isBlock) {
+        return <code {...props} />;
+      }
+      return (
+        <code
+          className="bg-primary/10 text-primary px-1.5 py-0.5 rounded font-mono text-xs border border-primary/20"
+          {...props}
+        />
+      );
+    },
+    pre: ({ node, children, ...props }: React.ComponentPropsWithoutRef<"pre"> & { node?: any }) => {
+      let filename = "";
+      
+      const codeEl = React.Children.toArray(children).find(
+        (child) => React.isValidElement(child) && child.type === "code"
+      );
+      if (codeEl && React.isValidElement(codeEl)) {
+        const codeNode = (codeEl.props as any).node;
+        const meta = codeNode?.data?.meta || codeNode?.meta || "";
+        const filenameMatch = meta.match(/filename=["']?([^"'\s]+)["']?/);
+        if (filenameMatch) {
+          filename = filenameMatch[1];
+        }
+      }
+
+      const displayFilename = filename || post.code_filename || "Code Block";
+
+      const childrenWithBlockProp = React.Children.map(children, (child) => {
+        if (React.isValidElement(child) && child.type === "code") {
+          return React.cloneElement(child as React.ReactElement<any>, { isBlock: true });
+        }
+        return child;
+      });
+
       return (
         <div className="my-8 rounded-lg overflow-hidden border border-white/5 bg-[#0a0a0a]">
           <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/5">
             <div className="flex items-center gap-2">
               <FileCode className="w-3.5 h-3.5 text-muted-foreground" />
               <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
-                {(props as { filename?: string }).filename ||
-                  post.code_filename ||
-                  "Code Block"}
+                {displayFilename}
               </span>
             </div>
             <MoreHorizontal className="w-3.5 h-3.5 text-muted-foreground" />
@@ -118,7 +145,9 @@ export default async function TilPost({
           <pre
             className="p-6 overflow-x-auto font-mono text-sm text-[#e0e0e0] leading-relaxed"
             {...props}
-          />
+          >
+            {childrenWithBlockProp}
+          </pre>
         </div>
       );
     },
@@ -208,11 +237,6 @@ export default async function TilPost({
       return { name, url };
     }) || [];
 
-  // Sanitize MDX content to prevent "acorn" parsing errors for literal braces
-  const sanitizedContent = post.content
-    .replace(/{/g, "&#123;")
-    .replace(/}/g, "&#125;");
-
   return (
     <div className="flex flex-col lg:flex-row gap-12 pt-0 pb-12">
       {/* Left Column: Post Content */}
@@ -255,17 +279,13 @@ export default async function TilPost({
         </div>
 
         <div className="prose prose-invert max-w-none prose-p:leading-relaxed prose-p:text-lg prose-headings:tracking-tighter prose-pre:bg-[#0a0a0a] prose-pre:border prose-pre:border-white/5">
-          <MDXRemote
-            source={sanitizedContent}
-            components={mdxComponents}
-            options={{
-              mdxOptions: {
-                format: "md",
-                remarkPlugins: [remarkMath, remarkGfm],
-                rehypePlugins: [rehypeKatex, rehypeHighlight],
-              },
-            }}
-          />
+          <ReactMarkdown
+            remarkPlugins={[remarkMath, remarkGfm]}
+            rehypePlugins={[rehypeKatex, rehypeHighlight]}
+            components={mdxComponents as any}
+          >
+            {post.content}
+          </ReactMarkdown>
         </div>
 
         {/* Post Footer */}

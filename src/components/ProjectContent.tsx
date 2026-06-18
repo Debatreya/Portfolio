@@ -1,3 +1,4 @@
+import React from "react";
 import { formatDistanceToNow } from "date-fns";
 import {
   ArrowUpRight,
@@ -8,7 +9,7 @@ import {
   MoreHorizontal,
   Star,
 } from "lucide-react";
-import { MDXRemote } from "next-mdx-remote/rsc";
+import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
@@ -89,22 +90,48 @@ export function ProjectContent({ project, isModal }: ProjectContentProps) {
         {...props}
       />
     ),
-    code: (props: React.ComponentPropsWithoutRef<"code">) => (
-      <code
-        className="bg-primary/10 text-primary px-1.5 py-0.5 rounded font-mono text-xs border border-primary/20"
-        {...props}
-      />
-    ),
-    pre: (props: React.ComponentPropsWithoutRef<"pre">) => {
+    code: ({ node, isBlock, ...props }: React.ComponentPropsWithoutRef<"code"> & { node?: any; isBlock?: boolean }) => {
+      if (isBlock) {
+        return <code {...props} />;
+      }
+      return (
+        <code
+          className="bg-primary/10 text-primary px-1.5 py-0.5 rounded font-mono text-xs border border-primary/20"
+          {...props}
+        />
+      );
+    },
+    pre: ({ node, children, ...props }: React.ComponentPropsWithoutRef<"pre"> & { node?: any }) => {
+      let filename = "";
+      
+      const codeEl = React.Children.toArray(children).find(
+        (child) => React.isValidElement(child) && child.type === "code"
+      );
+      if (codeEl && React.isValidElement(codeEl)) {
+        const codeNode = (codeEl.props as any).node;
+        const meta = codeNode?.data?.meta || codeNode?.meta || "";
+        const filenameMatch = meta.match(/filename=["']?([^"'\s]+)["']?/);
+        if (filenameMatch) {
+          filename = filenameMatch[1];
+        }
+      }
+
+      const displayFilename = filename || project.code_filename || "Code Block";
+
+      const childrenWithBlockProp = React.Children.map(children, (child) => {
+        if (React.isValidElement(child) && child.type === "code") {
+          return React.cloneElement(child as React.ReactElement<any>, { isBlock: true });
+        }
+        return child;
+      });
+
       return (
         <div className="my-8 rounded-lg overflow-hidden border border-white/5 bg-[#0a0a0a]">
           <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/5">
             <div className="flex items-center gap-2">
               <FileCode className="w-3.5 h-3.5 text-muted-foreground" />
               <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
-                {(props as { filename?: string }).filename ||
-                  project.code_filename ||
-                  "Code Block"}
+                {displayFilename}
               </span>
             </div>
             <MoreHorizontal className="w-3.5 h-3.5 text-muted-foreground" />
@@ -112,7 +139,9 @@ export function ProjectContent({ project, isModal }: ProjectContentProps) {
           <pre
             className="p-6 overflow-x-auto font-mono text-sm text-[#e0e0e0] leading-relaxed"
             {...props}
-          />
+          >
+            {childrenWithBlockProp}
+          </pre>
         </div>
       );
     },
@@ -294,17 +323,13 @@ export function ProjectContent({ project, isModal }: ProjectContentProps) {
 
       <div className="prose prose-invert max-w-none prose-h1:text-2xl prose-h1:mt-12 prose-h2:text-xl prose-h2:mt-10 prose-p:text-muted-foreground/90 prose-p:leading-relaxed prose-p:text-lg">
         {project.content ? (
-          <MDXRemote
-            source={project.content}
-            components={mdxComponents}
-            options={{
-              mdxOptions: {
-                format: "md",
-                remarkPlugins: [remarkMath, remarkGfm],
-                rehypePlugins: [rehypeKatex, rehypeHighlight],
-              },
-            }}
-          />
+          <ReactMarkdown
+            remarkPlugins={[remarkMath, remarkGfm]}
+            rehypePlugins={[rehypeKatex, rehypeHighlight]}
+            components={mdxComponents as any}
+          >
+            {project.content}
+          </ReactMarkdown>
         ) : (
           <div className="bg-white/5 border border-white/5 p-6 rounded-sm">
             <p className="font-mono text-xs uppercase tracking-widest text-primary mb-4">
