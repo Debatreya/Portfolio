@@ -25,6 +25,8 @@ import remarkMath from "remark-math";
 import { Badge } from "@/components/ui/badge";
 import { getRemoteTILById, getRemoteTILs } from "@/lib/content";
 import { getProjects } from "@/lib/github";
+import { constructMetadata } from "@/lib/utils";
+import type { Metadata } from "next";
 import "katex/dist/katex.min.css";
 
 // Custom components moved inside TilPost to access local data
@@ -35,6 +37,33 @@ export async function generateStaticParams() {
   return posts.map((post) => ({
     id: post.id,
   }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const id = (await params).id;
+  const post = await getRemoteTILById(id);
+
+  if (!post) {
+    return constructMetadata({
+      title: "Not Found",
+      description: "The requested TIL post could not be found.",
+    });
+  }
+
+  // Generate a snippet for description (first 160 chars)
+  const descriptionSnippet = post.content
+    .slice(0, 160)
+    .replace(/[#*`_\[\]\n]/g, " ") // basic markdown strip and remove newlines
+    .trim() + "...";
+
+  return constructMetadata({
+    title: `${post.title} | TIL`,
+    description: descriptionSnippet,
+  });
 }
 
 export default async function TilPost({

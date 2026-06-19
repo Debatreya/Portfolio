@@ -5,6 +5,8 @@ import { ProjectContent } from "@/components/ProjectContent";
 import { getProjectDeepDive, getRemoteTILs } from "@/lib/content";
 import { getProjects } from "@/lib/github";
 import type { ProjectManifest } from "@/types/portfolio";
+import { constructMetadata } from "@/lib/utils";
+import type { Metadata } from "next";
 
 type ContributorAvatar = NonNullable<
   ProjectManifest["contributor_avatars"]
@@ -19,6 +21,31 @@ export async function generateStaticParams() {
     .map((p) => ({
       id: p.id,
     }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const id = (await params).id;
+  const project = await getProjectDeepDive(id);
+
+  if (!project) {
+    return constructMetadata({
+      title: "Project Not Found",
+      description: "The requested project could not be found.",
+    });
+  }
+
+  // Use the project's title (or name) and description
+  const title = (project as any).title || (project as any).name || "Project Details";
+  const description = (project as any).description || `Deep dive into the ${title} project.`;
+
+  return constructMetadata({
+    title: `${title} | Project`,
+    description: description,
+  });
 }
 
 export default async function ProjectDeepDive({

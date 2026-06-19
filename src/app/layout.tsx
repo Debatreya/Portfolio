@@ -16,10 +16,9 @@ import { CommandPalette } from "@/components/CommandPalette";
 import { Navbar } from "@/components/layout/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 
-export const metadata: Metadata = {
-  title: "Debatreya Das | Developer OS",
-  description: "A Manifest-Driven Developer Portfolio and Digital Garden",
-};
+import { constructMetadata } from "@/lib/utils";
+
+export const metadata: Metadata = constructMetadata();
 
 export default function RootLayout({
   children,

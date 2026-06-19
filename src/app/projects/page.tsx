@@ -1,5 +1,12 @@
 import { ProjectGrid } from "@/components/ProjectGrid";
 import { getProjects } from "@/lib/github";
+import { constructMetadata } from "@/lib/utils";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = constructMetadata({
+  title: "Projects | Debatreya Das",
+  description: "A showcase of open source contributions, lab experiments, and full-stack systems synced directly from GitHub manifests.",
+});
 
 export const revalidate = 43200; // Refresh data every 12 hours
 

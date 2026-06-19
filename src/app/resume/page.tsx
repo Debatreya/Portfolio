@@ -1,6 +1,13 @@
 import { Download, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import resumeData from "@/data/resume.json";
+import { constructMetadata } from "@/lib/utils";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = constructMetadata({
+  title: "Resume | Debatreya Das",
+  description: "Software Engineer specialized in advanced backend architecture, systems design, deployment, modern web development.",
+});
 
 export default function ResumePage() {
   const { profile, work, education, skills } = resumeData;
