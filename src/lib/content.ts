@@ -111,10 +111,11 @@ export async function getRemoteTILs(): Promise<Post[]> {
       recursive: "true",
     });
 
-    // Filter for .qmd or .md files specifically in the 'records/' directory if applicable
+    // Filter for .qmd, .md, or .mdx files specifically in the 'records/' directory
     const qmdFiles = tree.tree.filter(
       (node) =>
-        (node.path?.endsWith(".qmd") || node.path?.endsWith(".md")) &&
+        node.path?.startsWith("records/") &&
+        (node.path?.endsWith(".qmd") || node.path?.endsWith(".md") || node.path?.endsWith(".mdx")) &&
         node.type === "blob",
     );
 
