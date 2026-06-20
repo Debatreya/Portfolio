@@ -11,7 +11,7 @@ export async function getProjects(): Promise<ProjectManifest[]> {
   try {
     // 1. Search for repositories with the "portfolio" topic
     const { data: searchData } = await octokit.rest.search.repos({
-      q: `user:${GITHUB_USERNAME} topic:portfolio`,
+      q: `user:${GITHUB_USERNAME} topic:portfolio fork:true`,
     });
 
     const projectPromises = searchData.items.map(
