@@ -1,10 +1,10 @@
 {
   "profile": {
     "name": "Debatreya Das",
-    "role": "Full Stack Engineer & SDE Intern",
+    "role": "Software Engineer",
     "availability": "available",
     "location": "Bankura, West Bengal",
-    "bio": "Final year CSE student at NIT Kurukshetra with experience at Microsoft and Samagra. Passionate about systems, distributed scaling, and building developer tools.",
+    "bio": "SDE Microsoft | B.Tech CSE, NIT Kurukshetra (9.51 CGPA) | Ex-SDE Intern Microsoft, Ex-SDE Intern Flywheel, Ex-OSS Contributor Samagra. Passionate about systems, distributed scaling, and building developer tools.",
     "avatarUrl": "/assets/avatar.jpg",
     "socials": {
       "github": "https://github.com/Debatreya",
@@ -75,7 +75,7 @@
       "institution": "National Institute of Technology, Kurukshetra",
       "degree": "Bachelor of Technology in Computer Science",
       "duration": "2022 - 2026",
-      "grade": "9.57 CGPA (7th Sem)"
+      "grade": "9.5152 CGPA"
     },
     {
       "institution": "Vivekananda Siksha Niketan High School",
@@ -85,7 +85,7 @@
     }
   ],
   "skills": {
-    "languages": ["TypeScript", "JavaScript", "C++", "Python", "Go", "Java"],
+    "languages": ["TypeScript", "JavaScript", "C++", "Python", "Go", "Java", "C#"],
     "frameworks": [
       "Next.js",
       "React",
